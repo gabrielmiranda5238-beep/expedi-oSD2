@@ -1,0 +1,1736 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Controle logistico SSP21 com layout responsivo para desktop e mobile.">
+  <title>Controle Logístico — SSP21</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      background: #0f172a;
+      color-scheme: dark;
+      overflow-x: hidden;
+    }
+
+    /* ── Tokens ML ── */
+    :root {
+      --ml-yellow:   #22c55e;
+      --ml-yellow-d: #16a34a;
+      --ml-blue:     #1e293b;
+      --ml-blue-l:   #3b82f6;
+      --ml-bg:       #0f172a;
+      --ml-white:    #1e293b;
+      --ml-border:   #334155;
+      --ml-text:     #e5edf8;
+      --ml-muted:    #94a3b8;
+      --ml-green:    #22c55e;
+      --ml-red:      #ef4444;
+      --ml-orange:   #f59e0b;
+      --ml-input:    #0f172a;
+      --ml-shadow:   none;
+      --ml-radius:   8px;
+    }
+
+    body {
+      font-family: 'Proxima Nova', 'Segoe UI', Arial, sans-serif;
+      background: var(--ml-bg);
+      color: var(--ml-text);
+      min-height: 100vh;
+      -webkit-text-size-adjust: 100%;
+      overflow-x: hidden;
+    }
+
+    /* ── Header ── */
+    .ml-header {
+      background: #0f172a;
+      padding: 0 24px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: none;
+      border-bottom: 1px solid #1e293b;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .ml-header-logo {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--ml-text);
+      letter-spacing: -0.5px;
+      white-space: nowrap;
+    }
+
+    .ml-header-logo span {
+      color: var(--ml-muted);
+      opacity: 1;
+      font-weight: 400;
+      font-size: 0.85rem;
+      margin-left: 6px;
+    }
+
+    .ml-header-spacer { flex: 1; }
+
+    .ml-header-badge {
+      background: #1e293b;
+      color: var(--ml-green);
+      border: 1px solid var(--ml-border);
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* ── Layout ── */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 16px 40px;
+      width: 100%;
+    }
+
+    /* ── Section title ── */
+    .section-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--ml-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 10px;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--ml-white);
+      border-radius: var(--ml-radius);
+      box-shadow: var(--ml-shadow);
+      padding: 20px;
+      margin-bottom: 16px;
+      border: 1px solid var(--ml-border);
+    }
+
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--ml-muted);
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--ml-border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ── KPIs ── */
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .kpi {
+      background: var(--ml-white);
+      border: 1px solid var(--ml-border);
+      border-radius: var(--ml-radius);
+      padding: 16px 12px;
+      text-align: center;
+      box-shadow: var(--ml-shadow);
+    }
+
+    .kpi-mobile-only {
+      display: none;
+    }
+
+    .kpi-value {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--ml-green);
+      line-height: 1;
+    }
+
+    .kpi-value.danger { color: var(--ml-red); }
+    .kpi-value.success { color: var(--ml-green); }
+
+    .kpi-label {
+      font-size: 0.7rem;
+      color: var(--ml-muted);
+      margin-top: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+    }
+
+    /* ── Grid ── */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+    }
+
+    /* ── Form ── */
+    label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--ml-muted);
+      margin-bottom: 4px;
+      margin-top: 10px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: var(--ml-radius);
+      border: 1px solid var(--ml-border);
+      background: var(--ml-input);
+      color: var(--ml-text);
+      font-size: 0.95rem;
+      font-family: inherit;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      min-height: 44px;
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--ml-blue-l);
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.18);
+    }
+
+    input::placeholder, textarea::placeholder {
+      color: #93a4ba;
+    }
+
+    /* ── Buttons ── */
+    button {
+      padding: 10px 18px;
+      border-radius: var(--ml-radius);
+      border: none;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-family: inherit;
+      transition: filter 0.15s, transform 0.1s;
+      touch-action: manipulation;
+      min-height: 44px;
+    }
+
+    button:hover  { filter: brightness(0.93); }
+    button:active { transform: scale(0.97); }
+
+    .btn-primary   { background: var(--ml-green); color: #0f172a; }
+    .btn-yellow    { background: var(--ml-green); color: #0f172a; }
+    .btn-secondary { background: var(--ml-blue-l); color: #fff; }
+    .btn-danger    { background: var(--ml-red); color: #fff; }
+    .btn-outline   { background: transparent; color: var(--ml-muted); border: 1px solid var(--ml-border); }
+
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    .btn-row button { flex: 1; min-width: 120px; }
+
+    /* ── Divider ── */
+    .section-divider {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ml-muted);
+      border-top: 1px solid var(--ml-border);
+      padding-top: 12px;
+      margin-top: 14px;
+      margin-bottom: 2px;
+    }
+
+    /* ── Alertas ── */
+    .alerta {
+      padding: 12px 16px;
+      border-radius: var(--ml-radius);
+      font-weight: 700;
+      font-size: 0.9rem;
+      border-left: 4px solid;
+    }
+
+    .ok       { background: rgba(34,197,94,0.22); color: #bbf7d0; border-color: var(--ml-green); }
+    .atraso   { background: rgba(239,68,68,0.18); color: #fecaca; border-color: var(--ml-red); }
+    .andamento{ background: rgba(245,158,11,0.18); color: #fde68a; border-color: var(--ml-orange); }
+
+    /* ── Tabela ── */
+    .table-wrapper {
+      overflow-x: auto;
+      margin-top: 12px;
+      border: 1px solid var(--ml-border);
+      border-radius: var(--ml-radius);
+      -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      min-width: 720px;
+    }
+
+    thead tr {
+      background: #0f172a;
+    }
+
+    th {
+      color: var(--ml-muted);
+      padding: 10px 10px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    td {
+      border-bottom: 1px solid var(--ml-border);
+      padding: 10px 10px;
+      text-align: center;
+      color: var(--ml-text);
+      background: var(--ml-white);
+    }
+
+    tbody tr:hover td { background: #243247; }
+    tbody tr:nth-child(even) td { background: #182235; }
+    tbody tr:nth-child(even):hover td { background: #243247; }
+
+    /* ── Badges ── */
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    .badge-green  { background: rgba(34,197,94,0.18); color: #86efac; border: 1px solid rgba(34,197,94,0.35); }
+    .badge-blue   { background: rgba(59,130,246,0.18); color: #93c5fd; border: 1px solid rgba(59,130,246,0.35); }
+    .badge-red    { background: rgba(239,68,68,0.18); color: #fca5a5; border: 1px solid rgba(239,68,68,0.35); }
+    .badge-yellow { background: rgba(245,158,11,0.18); color: #fcd34d; border: 1px solid rgba(245,158,11,0.35); }
+
+    /* ── Toast ── */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--ml-blue);
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: var(--ml-radius);
+      font-weight: 700;
+      font-size: 0.875rem;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.3s, transform 0.3s;
+      z-index: 9999;
+      pointer-events: none;
+      border: 1px solid var(--ml-border);
+      box-shadow: 0 18px 45px rgba(0,0,0,0.25);
+    }
+
+    #toast.show { opacity: 1; transform: translateY(0); }
+    #toast.erro { background: var(--ml-red); }
+
+    /* ── Modal ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(2,6,23,0.78);
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+      overflow-y: auto;
+      padding: 32px 16px;
+    }
+
+    .modal-overlay.show {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal {
+      background: var(--ml-white);
+      border-radius: 8px;
+      padding: 28px 24px 20px;
+      max-width: 800px;
+      width: 100%;
+      transform: translateY(-12px);
+      transition: transform 0.2s;
+      margin: auto;
+      border: 1px solid var(--ml-border);
+      box-shadow: 0 24px 70px rgba(0,0,0,0.35);
+    }
+
+    .modal-overlay.show .modal { transform: translateY(0); }
+
+    .modal-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--ml-muted);
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--ml-border);
+    }
+
+    .modal-body {
+      font-size: 0.9rem;
+      color: var(--ml-muted);
+      white-space: pre-wrap;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    /* ── Responsivo ── */
+    @media (max-width: 600px) {
+      .ml-header {
+        display: none;
+      }
+
+      .ml-header-logo {
+        font-size: 1rem;
+        white-space: normal;
+        line-height: 1.25;
+      }
+
+      .ml-header-logo span { display: none; }
+      .ml-header-spacer { display: none; }
+      .ml-header-badge { margin-left: auto; }
+
+      .container {
+        padding: 54px 15px 38px;
+      }
+
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+
+      .card-registro,
+      .card-veiculos,
+      .card-status,
+      .card-grafico,
+      .card-acoes {
+        display: none;
+      }
+
+      .card {
+        padding: 0;
+        margin-bottom: 0;
+        background: transparent;
+        border: 0;
+      }
+
+      .card-historico {
+        margin-top: 88px;
+        padding-top: 18px;
+        border-top: 1px solid var(--ml-border);
+      }
+
+      .card-historico .card-title {
+        margin-bottom: 104px;
+        padding: 0;
+        border: 0;
+        color: var(--ml-green);
+        font-size: 0;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .card-historico .card-title::after {
+        content: "Registros Operacionais";
+        font-size: 0.72rem;
+      }
+
+      .card-historico > .grid-2 {
+        display: none;
+      }
+
+      .card-title {
+        align-items: flex-start;
+        line-height: 1.3;
+      }
+
+      .kpi-row {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 11px;
+        margin-bottom: 0;
+      }
+
+      .kpi-mobile-only {
+        display: block;
+      }
+
+      .kpi {
+        min-height: 226px;
+        padding: 64px 8px 44px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .kpi-value {
+        color: #93c5fd;
+        font-size: 1.45rem;
+        letter-spacing: 0.04em;
+      }
+
+      .kpi-value.success {
+        color: var(--ml-green);
+      }
+
+      .kpi-value.danger {
+        color: var(--ml-red);
+      }
+
+      .kpi-label {
+        font-size: 0.64rem;
+        line-height: 1.25;
+        letter-spacing: 0.08em;
+      }
+
+      label {
+        font-size: 0.72rem;
+      }
+
+      input, textarea, button {
+        font-size: 16px;
+      }
+
+      textarea {
+        min-height: 110px;
+      }
+
+      .btn-row { flex-direction: column; }
+      .btn-row button { min-width: unset; width: 100%; }
+
+      .table-wrapper {
+        margin-left: 0;
+        margin-right: 0;
+        border: 0;
+        border-radius: 0;
+        overflow-x: visible;
+      }
+
+      .card-historico table {
+        font-size: 0.68rem;
+        min-width: 0;
+        table-layout: fixed;
+      }
+
+      .card-historico th,
+      .card-historico td {
+        padding: 12px 4px;
+        white-space: nowrap;
+      }
+
+      .card-historico th {
+        background: #293186;
+        color: #bfdbfe;
+        font-size: 0.6rem;
+      }
+
+      .card-historico th:nth-child(3),
+      .card-historico th:nth-child(4),
+      .card-historico th:nth-child(5),
+      .card-historico th:nth-child(6) {
+        font-size: 0;
+      }
+
+      .card-historico th:nth-child(3)::after {
+        content: "Audit. Início";
+        font-size: 0.6rem;
+      }
+
+      .card-historico th:nth-child(4)::after {
+        content: "Audit. Fim";
+        font-size: 0.6rem;
+      }
+
+      .card-historico th:nth-child(5)::after {
+        content: "Exp. Início";
+        font-size: 0.6rem;
+      }
+
+      .card-historico th:nth-child(6)::after {
+        content: "Exp. Fim";
+        font-size: 0.6rem;
+      }
+
+      .card-historico td {
+        background: transparent;
+        font-size: 0.72rem;
+      }
+
+      .card-historico th:nth-child(9),
+      .card-historico td:nth-child(9) {
+        display: none;
+      }
+
+      canvas {
+        max-width: 100%;
+        min-height: 220px;
+      }
+
+      .badge { font-size: 0.65rem; padding: 2px 7px; }
+      .alerta { font-size: 0.82rem; }
+
+      #toast { bottom: 12px; right: 12px; left: 12px; font-size: 0.82rem; }
+
+      .modal { padding: 18px 14px 14px; }
+      .modal-overlay { padding: 12px 8px; }
+      .modal-title { font-size: 0.95rem; }
+      .modal-body { font-size: 0.8rem; }
+      .modal-actions { flex-direction: column; }
+      .modal-actions button { width: 100%; }
+
+      [style*="grid-template-columns:repeat(3,1fr)"] {
+        grid-template-columns: 1fr !important;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .kpi-row {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 7px;
+      }
+
+      .container {
+        padding-left: 8px;
+        padding-right: 8px;
+      }
+
+      .kpi {
+        min-height: 150px;
+        padding: 42px 5px 28px;
+      }
+
+      .kpi-value {
+        font-size: 1.18rem;
+      }
+
+      .kpi-label {
+        font-size: 0.5rem;
+      }
+
+      .card-historico {
+        margin-top: 70px;
+      }
+
+      .card-historico .card-title {
+        margin-bottom: 72px;
+      }
+
+      .card-historico table {
+        font-size: 0.56rem;
+      }
+
+      .card-historico th,
+      .card-historico td {
+        padding: 9px 2px;
+      }
+    }
+
+    @media (min-width: 601px) and (max-width: 900px) {
+      .container {
+        padding-left: 14px;
+        padding-right: 14px;
+      }
+
+      .grid-2 { grid-template-columns: 1fr; }
+      .grid-3 { grid-template-columns: 1fr 1fr; }
+      .kpi-row { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* Mobile final: visual completo, compacto e sem cortes */
+    @media (max-width: 900px) {
+      body {
+        background:
+          radial-gradient(circle at top, rgba(59,130,246,0.08), transparent 32rem),
+          var(--ml-bg);
+      }
+
+      .ml-header {
+        display: flex;
+        position: sticky;
+        top: 0;
+        min-height: 68px;
+        height: auto;
+        padding: 14px 18px;
+        border-bottom: 1px solid var(--ml-border);
+        background: rgba(15,23,42,0.96);
+        backdrop-filter: blur(12px);
+      }
+
+      .ml-header-logo {
+        font-size: 1rem;
+        line-height: 1.25;
+        white-space: normal;
+      }
+
+      .ml-header-logo span {
+        display: block;
+        margin: 2px 0 0;
+        font-size: 0.68rem;
+      }
+
+      .ml-header-spacer {
+        display: block;
+      }
+
+      .ml-header-badge {
+        margin-left: auto;
+        padding: 8px 16px;
+        font-size: 0.72rem;
+      }
+
+      .container {
+        padding: 18px 14px 34px;
+      }
+
+      .kpi-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin-bottom: 18px;
+      }
+
+      .kpi-mobile-only {
+        display: none;
+      }
+
+      .kpi {
+        min-height: 126px;
+        padding: 22px 10px 18px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 16px;
+        background: rgba(30,41,59,0.72);
+        border: 1px solid rgba(51,65,85,0.95);
+      }
+
+      .kpi-value {
+        color: var(--ml-green);
+        font-size: clamp(1.55rem, 8vw, 2.35rem);
+      }
+
+      .kpi-label {
+        font-size: 0.68rem;
+        line-height: 1.25;
+        letter-spacing: 0.08em;
+      }
+
+      .card-registro,
+      .card-veiculos,
+      .card-status,
+      .card-grafico,
+      .card-acoes {
+        display: block;
+      }
+
+      .card {
+        display: block;
+        padding: 18px;
+        margin-bottom: 16px;
+        background: rgba(30,41,59,0.72);
+        border: 1px solid rgba(51,65,85,0.95);
+        border-radius: 16px;
+      }
+
+      .card-title {
+        margin-bottom: 18px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid var(--ml-border);
+        color: var(--ml-muted);
+        font-size: 1rem;
+        line-height: 1.3;
+      }
+
+      .card-title::after {
+        content: none !important;
+      }
+
+      .card-historico {
+        margin-top: 0;
+        padding-top: 18px;
+        border-top: 1px solid rgba(51,65,85,0.95);
+      }
+
+      .card-historico .card-title {
+        margin-bottom: 18px;
+        color: var(--ml-green);
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+      }
+
+      .card-historico > .grid-2 {
+        display: grid;
+      }
+
+      .grid-2,
+      .grid-3 {
+        grid-template-columns: 1fr;
+      }
+
+      label {
+        margin-top: 12px;
+        margin-bottom: 8px;
+        font-size: 0.82rem;
+      }
+
+      input,
+      textarea,
+      button {
+        min-height: 52px;
+        font-size: 16px;
+        border-radius: 14px;
+      }
+
+      textarea {
+        min-height: 120px;
+      }
+
+      .btn-row {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .btn-row button {
+        width: 100%;
+        min-width: 0;
+      }
+
+      .table-wrapper {
+        overflow-x: auto;
+        border: 1px solid var(--ml-border);
+        border-radius: 14px;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      table,
+      .card-historico table {
+        min-width: 720px;
+        table-layout: auto;
+        font-size: 0.78rem;
+      }
+
+      th,
+      td,
+      .card-historico th,
+      .card-historico td {
+        padding: 10px 8px;
+        white-space: nowrap;
+      }
+
+      .card-historico th {
+        background: #0f172a;
+        color: var(--ml-muted);
+        font-size: 0.7rem;
+      }
+
+      .card-historico th:nth-child(3),
+      .card-historico th:nth-child(4),
+      .card-historico th:nth-child(5),
+      .card-historico th:nth-child(6) {
+        font-size: 0.7rem;
+      }
+
+      .card-historico th:nth-child(3)::after,
+      .card-historico th:nth-child(4)::after,
+      .card-historico th:nth-child(5)::after,
+      .card-historico th:nth-child(6)::after {
+        content: none;
+      }
+
+      .card-historico th:nth-child(9),
+      .card-historico td:nth-child(9) {
+        display: table-cell;
+      }
+
+      canvas {
+        min-height: 240px;
+      }
+
+      .modal {
+        width: min(100%, 92vw);
+      }
+    }
+
+    @media (max-width: 430px) {
+      .container {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+
+      .kpi-row {
+        gap: 10px;
+      }
+
+      .kpi {
+        min-height: 112px;
+        padding: 18px 8px 14px;
+      }
+
+      .kpi-label {
+        font-size: 0.58rem;
+      }
+
+      .card {
+        padding: 16px;
+      }
+    }
+
+    /* Ajustes para cores inline geradas pelo relatorio/modal */
+    [style*="#F5F9FF"],
+    [style*="#F0FFF4"],
+    [style*="#FFF1F2"] {
+      background: #1e293b !important;
+      border-color: #334155 !important;
+    }
+
+    [style*="#DBEAFE"],
+    [style*="#DCFCE7"],
+    [style*="#FEE2E2"] {
+      border-color: #334155 !important;
+    }
+
+    [style*="#2D3277"],
+    [style*="#3483FA"] {
+      color: #93c5fd !important;
+    }
+
+    [style*="#00A650"] {
+      color: #22c55e !important;
+    }
+
+    [style*="#F23D4F"] {
+      color: #ef4444 !important;
+    }
+
+    [style*="#999"],
+    [style*="#666"] {
+      color: #94a3b8 !important;
+    }
+
+    [style*="#333"] {
+      color: #e5edf8 !important;
+    }
+
+    [style*="#FFE600"] {
+      border-color: #334155 !important;
+      color: #22c55e !important;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Header estilo ML -->
+  <header class="ml-header">
+    <div class="ml-header-logo">
+       SSP21 Logística
+      <span>Controle Operacional</span>
+    </div>
+    <div class="ml-header-spacer"></div>
+    <div class="ml-header-badge">MOOCA</div>
+  </header>
+
+<div class="container">
+
+  <!-- KPIs -->
+  <div class="kpi-row">
+    <div class="kpi">
+      <div class="kpi-value" id="kpiPacotesHoje">0</div>
+      <div class="kpi-label">Total Pacotes</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-value" id="kpiRotasHoje">0</div>
+      <div class="kpi-label">Total Rotas Registradas</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-value success" id="kpiNaRuaKpi">0</div>
+      <div class="kpi-label">Rotas Importadas</div>
+    </div>
+    <div class="kpi kpi-mobile-only">
+      <div class="kpi-value" id="kpiMobileNaRua">0</div>
+      <div class="kpi-label">Rotas na Rua</div>
+    </div>
+    <div class="kpi kpi-mobile-only">
+      <div class="kpi-value success" id="kpiMobileFinalizadas">0</div>
+      <div class="kpi-label">Rotas Finalizadas</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-value danger" id="kpiFinalizados">0</div>
+      <div class="kpi-label">Rotas Atrasadas</div>
+    </div>
+  </div>
+
+  <!-- REGISTRO -->
+  <div class="card card-registro">
+    <div class="card-title">📋 Registro Operacional</div>
+
+    <div class="grid-2">
+      <div>
+        <label for="data">Data</label>
+        <input type="date" id="data">
+      </div>
+      <div>
+        <label for="horarioDescarregamento">Horário Descarregamento</label>
+        <input type="time" id="horarioDescarregamento">
+      </div>
+    </div>
+
+    <div class="section-divider">Auditoria</div>
+    <div class="grid-2">
+      <div>
+        <label for="auditoriaInicio">Início da Auditoria</label>
+        <input type="time" id="auditoriaInicio">
+      </div>
+      <div>
+        <label for="auditoriaFim">Fim da Auditoria</label>
+        <input type="time" id="auditoriaFim">
+      </div>
+    </div>
+
+    <div class="section-divider">Expedição</div>
+    <div class="grid-2">
+      <div>
+        <label for="expInicio">Início da Expedição</label>
+        <input type="time" id="expInicio">
+      </div>
+      <div>
+        <label for="expFim">Fim da Expedição</label>
+        <input type="time" id="expFim">
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <label for="pacotes">Quantidade de Pacotes</label>
+        <input type="number" id="pacotes" placeholder="0" min="0">
+      </div>
+      <div>
+        <label for="rotas">Quantidade de Rotas</label>
+        <input type="number" id="rotas" placeholder="0" min="0">
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-yellow" onclick="salvar()">💾 Salvar Registro</button>
+    </div>
+  </div>
+
+  <!-- VEICULOS -->
+  <div class="card card-veiculos">
+    <div class="card-title">📍 Veículos em Rota</div>
+
+    <div id="areaImport">
+      <label for="pasteRota">Cole os dados do sistema aqui</label>
+      <textarea id="pasteRota" placeholder="Cole o texto copiado do sistema de logística e clique em Importar..." style="height:100px;resize:vertical;margin-top:4px;"></textarea>
+      <div class="btn-row">
+        <button class="btn-primary" onclick="importarRotas()">📥 Importar</button>
+      </div>
+    </div>
+
+    <div id="areaLimpar" style="display:none">
+      <div class="btn-row">
+        <button class="btn-danger" onclick="limparRotas()">🗑 Limpar Registros</button>
+      </div>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Rota</th>
+            <th>Pendentes</th>
+            <th>Falhas</th>
+            <th>Sucesso</th>
+            <th>ORH Exec.</th>
+            <th>Status</th>
+            <th>Ação</th>
+          </tr>
+        </thead>
+        <tbody id="tabelaVeiculos"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ALERTA -->
+  <div class="card card-status">
+    <div class="card-title">🚨 Status da Operação</div>
+    <div id="alertaGeral" class="alerta ok">✅ Sistema OK</div>
+  </div>
+
+  <!-- GRAFICO -->
+  <div class="card card-grafico">
+    <div class="card-title">📊 Pacotes por Dia</div>
+    <canvas id="graficoCanvas" height="100"></canvas>
+  </div>
+
+  <!-- BUSCA + HISTORICO -->
+  <div class="card card-historico">
+    <div class="card-title">📋 Histórico de Registros</div>
+    <div class="grid-2" style="align-items:flex-end; gap:10px;">
+      <div>
+        <label for="buscaData">Filtrar por data</label>
+        <input type="date" id="buscaData" oninput="buscar()">
+      </div>
+      <div>
+        <button class="btn-outline" onclick="limparBusca()" style="margin-top:22px;">✕ Limpar filtro</button>
+      </div>
+    </div>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Descarreg.</th>
+            <th>Auditoria Início</th>
+            <th>Auditoria Fim</th>
+            <th>Expedição Início</th>
+            <th>Expedição Fim</th>
+            <th>Pacotes</th>
+            <th>Rotas</th>
+            <th>Ação</th>
+          </tr>
+        </thead>
+        <tbody id="tabela"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- AÇÕES -->
+  <div class="card card-acoes">
+    <div class="btn-row">
+      <button class="btn-yellow" onclick="exportarCSV()">📥 Exportar CSV</button>
+      <button class="btn-secondary" onclick="relatorioCompleto()">🧾 Relatório</button>
+      <button class="btn-danger" onclick="limparTudo()">🗑 Limpar Dados</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-title" id="modalTitle"></div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-actions" id="modalActions"></div>
+  </div>
+</div>
+
+<script>
+  // ─── Utilitários ───────────────────────────────────────────────
+  function toast(msg, tipo = 'ok') {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.remove('erro');
+    if (tipo === 'erro') el.classList.add('erro');
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 2800);
+  }
+
+  // Modal de alerta (substitui alert)
+  function modalAlert(titulo, corpo) {
+    document.getElementById('modalTitle').textContent = titulo;
+    document.getElementById('modalBody').textContent = corpo;
+    const actions = document.getElementById('modalActions');
+    actions.innerHTML = '';
+    const btn = document.createElement('button');
+    btn.className = 'btn-primary';
+    btn.textContent = 'OK';
+    btn.onclick = fecharModal;
+    actions.appendChild(btn);
+    document.getElementById('modalOverlay').classList.add('show');
+  }
+
+  // Modal de confirmação (substitui confirm) — retorna Promise<boolean>
+  function modalConfirm(titulo, corpo) {
+    return new Promise(resolve => {
+      document.getElementById('modalTitle').textContent = titulo;
+      document.getElementById('modalBody').textContent = corpo;
+      const actions = document.getElementById('modalActions');
+      actions.innerHTML = '';
+
+      const btnCancelar = document.createElement('button');
+      btnCancelar.className = 'btn-outline';
+      btnCancelar.textContent = 'Cancelar';
+      btnCancelar.onclick = () => { fecharModal(); resolve(false); };
+
+      const btnConfirmar = document.createElement('button');
+      btnConfirmar.className = 'btn-danger';
+      btnConfirmar.textContent = 'Confirmar';
+      btnConfirmar.onclick = () => { fecharModal(); resolve(true); };
+
+      actions.appendChild(btnCancelar);
+      actions.appendChild(btnConfirmar);
+      document.getElementById('modalOverlay').classList.add('show');
+    });
+  }
+
+  function fecharModal() {
+    document.getElementById('modalOverlay').classList.remove('show');
+  }
+
+  // Fechar clicando fora
+  document.getElementById('modalOverlay').addEventListener('click', function(e) {
+    if (e.target === this) fecharModal();
+  });
+
+  function hoje() {
+    return new Date().toISOString().split('T')[0];
+  }
+
+  function getLogistica() {
+    return JSON.parse(localStorage.getItem('logistica')) || [];
+  }
+
+  function setLogistica(dados) {
+    localStorage.setItem('logistica', JSON.stringify(dados));
+  }
+
+  function getVeiculos() {
+    return JSON.parse(localStorage.getItem('veiculos')) || [];
+  }
+
+  function setVeiculos(lista) {
+    localStorage.setItem('veiculos', JSON.stringify(lista));
+  }
+
+  function getVal(id) {
+    return document.getElementById(id).value.trim();
+  }
+
+  // ─── Registro ──────────────────────────────────────────────────
+  function salvar() {
+    const data = getVal('data');
+    const pacotes = +getVal('pacotes');
+    const rotas = +getVal('rotas');
+
+    if (!data) return toast('Informe a data.', 'erro');
+    if (pacotes < 0 || rotas < 0) return toast('Valores não podem ser negativos.', 'erro');
+
+    const dados = getLogistica();
+    dados.push({
+      data,
+      descarregamento: getVal('horarioDescarregamento'),
+      auditoriaInicio: getVal('auditoriaInicio'),
+      auditoriaFim: getVal('auditoriaFim'),
+      inicio: getVal('expInicio'),
+      fim: getVal('expFim'),
+      pacotes,
+      rotas
+    });
+    setLogistica(dados);
+
+    ['data', 'horarioDescarregamento', 'auditoriaInicio', 'auditoriaFim', 'expInicio', 'expFim', 'pacotes', 'rotas'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+
+    toast('Registro salvo!');
+    carregar();
+    atualizarKPIs();
+  }
+
+  // ─── Veículos / Parser ─────────────────────────────────────────
+  function importarRotas() {
+    const texto = document.getElementById('pasteRota').value.trim();
+    if (!texto) return toast('Cole os dados antes de importar.', 'erro');
+
+    const rotas = parsearRotas(texto);
+    if (rotas.length === 0) return toast('Nenhuma rota reconhecida no texto.', 'erro');
+
+    setVeiculos(rotas);
+    document.getElementById('pasteRota').value = '';
+    document.getElementById('areaImport').style.display = 'none';
+    document.getElementById('areaLimpar').style.display = 'block';
+    toast(`${rotas.length} rota(s) importada(s)!`);
+    atualizarVeiculos();
+  }
+
+  function finalizarRotaImportada(index) {
+    const lista = getVeiculos();
+    const hora = new Date().getHours();
+    const eraAtrasada = hora >= 23 || lista[index].status === 'ATRASADA';
+    lista[index].status = eraAtrasada ? 'FINALIZADO COM ATRASO' : 'FINALIZADO';
+    setVeiculos(lista);
+    toast(`Rota ${lista[index].codigo} finalizada${eraAtrasada ? ' com atraso' : ''}.`);
+    atualizarVeiculos();
+  }
+
+  function limparRotas() {
+    modalConfirm('Limpar rotas', 'Remover todas as rotas importadas?').then(ok => {
+      if (!ok) return;
+      setVeiculos([]);
+      document.getElementById('areaImport').style.display = 'block';
+      document.getElementById('areaLimpar').style.display = 'none';
+      atualizarVeiculos();
+      toast('Rotas removidas.');
+    });
+  }
+
+  function parsearRotas(texto) {
+    const rotas = [];
+
+    // Divide o texto em blocos por código de rota (ex: C14_SD2, 4A13_SD2, D3_SD2)
+    const blocos = texto.split(/(?=\b[A-Z0-9]+_SD\d+\s*·)/);
+
+    blocos.forEach(bloco => {
+      if (!bloco.trim()) return;
+
+      // Código da rota: ex "C14_SD2"
+      const codigoMatch = bloco.match(/^([A-Z0-9]+_SD\d+)/);
+      if (!codigoMatch) return;
+      const codigo = codigoMatch[1];
+
+      // Número da rota: ex "#366367625"
+      const numMatch = bloco.match(/#(\d+)/);
+      const numero = numMatch ? numMatch[1] : '—';
+
+      // Motorista: aparece após "·MSP\d+ · SD\d+" e antes de "Extra" ou "MLP"
+      const motoristaMatch = bloco.match(/·MSP\d+\s*·\s*SD\d+\s*([a-záéíóúãõâêîôûàèìòùç\s]+?)(?:Extra|MLP)/i);
+      const motorista = motoristaMatch ? motoristaMatch[1].trim() : '—';
+
+      // SPR: pendentes, falhas, sucesso
+      const sprMatch = bloco.match(/(\d+)\s*pendentes?,\s*(\d+)\s*com\s*falha[s]?,\s*(\d+)\s*bem-sucedidos/i);
+      const pendentes = sprMatch ? +sprMatch[1] : 0;
+      const falhas    = sprMatch ? +sprMatch[2] : 0;
+      const sucesso   = sprMatch ? +sprMatch[3] : 0;
+
+      // ORH executado: ex "Executado05:58hs"
+      const orhMatch = bloco.match(/Executado\s*(\d{2}:\d{2})\s*hs/i);
+      const orh = orhMatch ? orhMatch[1] : '—';
+
+      // Alertas ativos
+      const alertaMatch = bloco.match(/(\d+)\s*Alerta[s]?\s*ativo[s]?/i);
+      const alertas = alertaMatch ? +alertaMatch[1] : 0;
+
+      // Status: "A caminho da zona" = a caminho, senão "Em rota"
+      let status = 'EM ROTA';
+      if (/a caminho da zona/i.test(bloco)) status = 'A CAMINHO';
+      if (/rota atrasada/i.test(bloco)) status = 'ATRASADA';
+
+      rotas.push({ codigo, numero, motorista, pendentes, falhas, sucesso, orh, alertas, status });
+    });
+
+    return rotas;
+  }
+
+  function atualizarVeiculos() {
+    const lista = getVeiculos();
+    let html = '';
+    let naRua = 0;
+    let finalizados = 0;
+
+    lista.forEach(v => {
+      // Compatibilidade com rotas antigas (formato simples)
+      if (v.codigo) {
+        naRua++;
+        const hora = new Date().getHours();
+        const atrasada = hora >= 23 || v.status === 'ATRASADA';
+        const statusBadge = v.status === 'FINALIZADO'
+          ? '<span class="badge badge-green">FINALIZADO</span>'
+          : v.status === 'FINALIZADO COM ATRASO'
+          ? '<span class="badge badge-yellow">FINALIZADO COM ATRASO</span>'
+          : atrasada
+          ? '<span class="badge badge-red">ATRASADA</span>'
+          : v.status === 'A CAMINHO'
+            ? '<span class="badge badge-blue">A CAMINHO</span>'
+            : '<span class="badge badge-blue">EM ROTA</span>';
+
+        const alertaBadge = v.alertas > 0
+          ? `<span class="badge badge-red">⚠ ${v.alertas}</span>`
+          : '<span style="color:#999">—</span>';
+
+        html += `<tr>
+          <td style="font-weight:700;color:#2D3277">${v.codigo}</td>
+          <td>${v.pendentes}</td>
+          <td style="color:${v.falhas > 0 ? '#F23D4F' : '#333'};font-weight:${v.falhas > 0 ? '700' : '400'}">${v.falhas}</td>
+          <td style="color:#00A650;font-weight:600">${v.sucesso}</td>
+          <td>${v.orh}</td>
+          <td>${statusBadge}</td>
+          <td>${v.status !== 'FINALIZADO' && v.status !== 'FINALIZADO COM ATRASO' ? `<button class="btn-primary" style="padding:4px 12px;font-size:0.75rem;" onclick="finalizarRotaImportada(${lista.indexOf(v)})">✔ Finalizar</button>` : '<span style="color:#999">—</span>'}</td>
+        </tr>`;
+      } else {
+        // formato legado simples
+        if (v.status === 'EM ROTA') naRua++;
+        else finalizados++;
+        html += `<tr>
+          <td colspan="8" style="text-align:left">${v.rota || '—'}</td>
+          <td><span class="badge ${v.status === 'EM ROTA' ? 'badge-blue' : 'badge-green'}">${v.status}</span></td>
+        </tr>`;
+      }
+    });
+
+    document.getElementById('tabelaVeiculos').innerHTML = html || '<tr><td colspan="8" style="color:#999;padding:16px">Nenhuma rota importada</td></tr>';
+
+    const rotasImportadas = lista.filter(v => v.codigo).length || lista.length;
+    const rotasNaRua = lista.filter(v => v.status === 'EM ROTA' || v.status === 'ATRASADA' || v.status === 'A CAMINHO').length;
+    const rotasFinalizadas = lista.filter(v => v.status === 'FINALIZADO' || v.status === 'FINALIZADO COM ATRASO').length;
+    const rotasAtrasadas = lista.filter(v => v.status === 'ATRASADA').length;
+
+    document.getElementById('kpiNaRuaKpi').textContent = rotasImportadas;
+    document.getElementById('kpiFinalizados').textContent = rotasAtrasadas;
+
+    const kpiMobileNaRua = document.getElementById('kpiMobileNaRua');
+    const kpiMobileFinalizadas = document.getElementById('kpiMobileFinalizadas');
+    if (kpiMobileNaRua) kpiMobileNaRua.textContent = rotasNaRua;
+    if (kpiMobileFinalizadas) kpiMobileFinalizadas.textContent = rotasFinalizadas;
+  }
+
+  // ─── Alerta ────────────────────────────────────────────────────
+  function atualizarAlerta() {
+    const veiculos = getVeiculos();
+    const hora = new Date().getHours();
+    const el = document.getElementById('alertaGeral');
+
+    const total = veiculos.length;
+    const atrasadas = veiculos.filter(v => v.status === 'ATRASADA').length;
+    const naRua = veiculos.filter(v => v.status === 'EM ROTA' || v.status === 'ATRASADA' || v.status === 'A CAMINHO').length;
+
+    if (hora >= 23 && naRua > 0) {
+      el.textContent = `🚨 ATRASO — ${naRua} rota(s) ainda em andamento após 23h`;
+      el.className = 'alerta atraso';
+    } else if (atrasadas > 0) {
+      el.textContent = `⚠️ ${atrasadas} rota(s) atrasada(s) de ${total} em operação`;
+      el.className = 'alerta andamento';
+    } else if (naRua > 0) {
+      el.textContent = `⚠️ Operação em andamento — ${naRua} rota(s) na rua`;
+      el.className = 'alerta andamento';
+    } else {
+      el.textContent = '✅ Todos os veículos retornaram';
+      el.className = 'alerta ok';
+    }
+  }
+
+  // ─── KPIs ──────────────────────────────────────────────────────
+  function atualizarKPIs() {
+    const dados = getLogistica();
+    const pacotesHoje = dados.reduce((s, d) => s + d.pacotes, 0);
+    const rotasHoje = dados.reduce((s, d) => s + d.rotas, 0);
+
+    document.getElementById('kpiPacotesHoje').textContent = pacotesHoje;
+    document.getElementById('kpiRotasHoje').textContent = rotasHoje;
+  }
+
+  // ─── Histórico ─────────────────────────────────────────────────
+  function carregar(lista = null) {
+    const dados = lista || getLogistica();
+    let html = '';
+    const labels = [];
+    const valores = [];
+
+    if (dados.length === 0) {
+      html = '<tr><td colspan="9" style="color:#999;padding:16px">Nenhum registro encontrado</td></tr>';
+    } else {
+      dados.forEach((d, i) => {
+        html += `<tr>
+          <td>${d.data}</td>
+          <td>${d.descarregamento || '—'}</td>
+          <td>${d.auditoriaInicio || '—'}</td>
+          <td>${d.auditoriaFim || '—'}</td>
+          <td>${d.inicio || '—'}</td>
+          <td>${d.fim || '—'}</td>
+          <td>${d.pacotes}</td>
+          <td>${d.rotas}</td>
+          <td><button class="btn-danger" style="padding:4px 12px; font-size:0.75rem;" onclick="excluirRegistro(${i})">✕</button></td>
+        </tr>`;
+        labels.push(d.data);
+        valores.push(d.pacotes);
+      });
+    }
+
+    document.getElementById('tabela').innerHTML = html;
+    atualizarGrafico(labels, valores);
+    atualizarKPIs();
+  }
+
+  function excluirRegistro(index) {
+    modalConfirm('Excluir registro', 'Tem certeza que deseja excluir este registro?').then(ok => {
+      if (!ok) return;
+      const dados = getLogistica();
+      dados.splice(index, 1);
+      setLogistica(dados);
+      toast('Registro excluído.');
+      carregar();
+    });
+  }
+
+  // ─── Busca ─────────────────────────────────────────────────────
+  function buscar() {
+    const dataBusca = getVal('buscaData');
+    if (!dataBusca) return carregar();
+    const dados = getLogistica().filter(d => d.data === dataBusca);
+    carregar(dados);
+  }
+
+  function limparBusca() {
+    document.getElementById('buscaData').value = '';
+    carregar();
+  }
+
+  // ─── Gráfico ───────────────────────────────────────────────────
+  let chart;
+  function atualizarGrafico(labels, dados) {
+    if (chart) chart.destroy();
+
+    chart = new Chart(document.getElementById('graficoCanvas'), {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Pacotes',
+          data: dados,
+          borderColor: '#22c55e',
+          backgroundColor: 'rgba(34,197,94,0.10)',
+          borderWidth: 2,
+          pointBackgroundColor: '#22c55e',
+          pointBorderColor: '#0f172a',
+          pointBorderWidth: 2,
+          tension: 0.3,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+            legend: { labels: { color: '#94a3b8' } }
+        },
+        scales: {
+            x: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
+            y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' }, beginAtZero: true }
+        }
+      }
+    });
+  }
+
+  // ─── Exportar ──────────────────────────────────────────────────
+  function exportarCSV() {
+    const dados = getLogistica();
+    if (dados.length === 0) return toast('Nenhum dado para exportar.', 'erro');
+
+    const veiculos = getVeiculos();
+    const emAndamento = veiculos.filter(v => v.status === 'EM ROTA').length;
+    const finalizados = veiculos.filter(v => v.status === 'FINALIZADO').length;
+
+    let csv = 'Data,Descarregamento,Auditoria Inicio,Auditoria Fim,Expedicao Inicio,Expedicao Fim,Pacotes,Rotas,Rotas em Andamento,Rotas Finalizadas\n';
+    dados.forEach(d => {
+      csv += `${d.data},${d.descarregamento || ''},${d.auditoriaInicio || ''},${d.auditoriaFim || ''},${d.inicio || ''},${d.fim || ''},${d.pacotes},${d.rotas},${emAndamento},${finalizados}\n`;
+    });
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `logistica_${hoje()}.csv`;
+    link.click();
+    toast('CSV exportado!');
+  }
+
+  // ─── Relatório ─────────────────────────────────────────────────
+  function relatorioCompleto() {
+    const veiculos = getVeiculos();
+    const dados = getLogistica();
+    const naRua = veiculos.filter(v => v.status === 'EM ROTA' || v.status === 'ATRASADA' || v.status === 'A CAMINHO');
+    const finalizados = veiculos.filter(v => v.status === 'FINALIZADO' || v.status === 'FINALIZADO COM ATRASO');
+    const pacotesTotal = dados.reduce((s, d) => s + d.pacotes, 0);
+    const rotasTotal = dados.reduce((s, d) => s + d.rotas, 0);
+    const hoje = new Date().toLocaleDateString('pt-BR');
+
+    // ── Registros operacionais ──
+    let linhasRegistros = '';
+    if (dados.length === 0) {
+      linhasRegistros = '<tr><td colspan="8" style="color:#999;text-align:center;padding:14px">Nenhum registro</td></tr>';
+    } else {
+      dados.forEach(d => {
+        linhasRegistros += `<tr>
+          <td>${d.data}</td>
+          <td>${d.descarregamento || '—'}</td>
+          <td>${d.auditoriaInicio || '—'}</td>
+          <td>${d.auditoriaFim || '—'}</td>
+          <td>${d.inicio || '—'}</td>
+          <td>${d.fim || '—'}</td>
+          <td>${d.pacotes}</td>
+          <td>${d.rotas}</td>
+        </tr>`;
+      });
+    }
+
+    // ── Veículos ──
+    let linhasVeiculos = '';
+    if (veiculos.length === 0) {
+      linhasVeiculos = '<tr><td colspan="6" style="color:#999;text-align:center;padding:14px">Nenhuma rota importada</td></tr>';
+    } else {
+      veiculos.forEach(v => {
+        if (v.codigo) {
+          const hora = new Date().getHours();
+          const efetivo = (hora >= 23 && v.status !== 'FINALIZADO' && v.status !== 'FINALIZADO COM ATRASO')
+            ? 'ATRASADA' : v.status;
+
+          const statusBadge =
+            efetivo === 'FINALIZADO'           ? '<span class="badge badge-green">FINALIZADO</span>' :
+            efetivo === 'FINALIZADO COM ATRASO'? '<span class="badge badge-yellow">FINALIZADO COM ATRASO</span>' :
+            efetivo === 'ATRASADA'             ? '<span class="badge badge-red">ATRASADA</span>' :
+            efetivo === 'A CAMINHO'            ? '<span class="badge badge-blue">A CAMINHO</span>' :
+                                                 '<span class="badge badge-blue">EM ROTA</span>';
+
+          linhasVeiculos += `<tr>
+            <td style="font-weight:700;color:#2D3277">${v.codigo}</td>
+            <td>${v.pendentes}</td>
+            <td style="color:${v.falhas > 0 ? '#F23D4F' : '#333'};font-weight:${v.falhas > 0 ? '700' : '400'}">${v.falhas}</td>
+            <td style="color:#00A650;font-weight:600">${v.sucesso}</td>
+            <td>${v.orh}</td>
+            <td>${statusBadge}</td>
+          </tr>`;
+        }
+      });
+      if (!linhasVeiculos) {
+        linhasVeiculos = '<tr><td colspan="6" style="color:#999;text-align:center;padding:14px">Nenhuma rota importada</td></tr>';
+      }
+    }
+
+    const html = `
+      <div style="font-size:0.8rem;color:#666;margin-bottom:16px">Gerado em ${hoje} às ${new Date().toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'})}</div>
+
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px">
+        <div style="background:#F5F9FF;border:1px solid #DBEAFE;border-radius:6px;padding:12px;text-align:center">
+          <div style="font-size:1.6rem;font-weight:800;color:#2D3277">${pacotesTotal}</div>
+          <div style="font-size:0.7rem;color:#666;margin-top:4px;text-transform:uppercase;font-weight:600">Total Pacotes</div>
+        </div>
+        <div style="background:#F5F9FF;border:1px solid #DBEAFE;border-radius:6px;padding:12px;text-align:center">
+          <div style="font-size:1.6rem;font-weight:800;color:#2D3277">${rotasTotal}</div>
+          <div style="font-size:0.7rem;color:#666;margin-top:4px;text-transform:uppercase;font-weight:600">Total Rotas Registradas</div>
+        </div>
+        <div style="background:#F5F9FF;border:1px solid #DBEAFE;border-radius:6px;padding:12px;text-align:center">
+          <div style="font-size:1.6rem;font-weight:800;color:#2D3277">${veiculos.length}</div>
+          <div style="font-size:0.7rem;color:#666;margin-top:4px;text-transform:uppercase;font-weight:600">Rotas Importadas</div>
+        </div>
+        <div style="background:#F5F9FF;border:1px solid #DBEAFE;border-radius:6px;padding:12px;text-align:center">
+          <div style="font-size:1.6rem;font-weight:800;color:#3483FA">${naRua.length}</div>
+          <div style="font-size:0.7rem;color:#666;margin-top:4px;text-transform:uppercase;font-weight:600">Rotas na Rua</div>
+        </div>
+        <div style="background:#F0FFF4;border:1px solid #DCFCE7;border-radius:6px;padding:12px;text-align:center">
+          <div style="font-size:1.6rem;font-weight:800;color:#00A650">${finalizados.length}</div>
+          <div style="font-size:0.7rem;color:#666;margin-top:4px;text-transform:uppercase;font-weight:600">Rotas Finalizadas</div>
+        </div>
+        <div style="background:#FFF1F2;border:1px solid #FEE2E2;border-radius:6px;padding:12px;text-align:center">
+          <div style="font-size:1.6rem;font-weight:800;color:#F23D4F">${veiculos.filter(v => v.status === 'ATRASADA').length}</div>
+          <div style="font-size:0.7rem;color:#666;margin-top:4px;text-transform:uppercase;font-weight:600">Rotas Atrasadas</div>
+        </div>
+      </div>
+
+      <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:#666;font-weight:700;border-top:2px solid #FFE600;padding-top:12px;margin-bottom:10px">Registros Operacionais</div>
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:0.78rem">
+          <thead>
+            <tr>
+              <th style="background:#2D3277;color:#fff;padding:8px 6px;text-align:center;font-size:0.7rem;text-transform:uppercase">Data</th>
+              <th style="background:#2D3277;color:#fff;padding:8px 6px;text-align:center;font-size:0.7rem;text-transform:uppercase">Descarreg.</th>
+              <th style="background:#2D3277;color:#fff;padding:8px 6px;text-align:center;font-size:0.7rem;text-transform:uppercase">Audit. Início</th>
+              <th style="background:#2D3277;color:#fff;padding:8px 6px;text-align:center;font-size:0.7rem;text-transform:uppercase">Audit. Fim</th>
+              <th style="background:#2D3277;color:#fff;padding:8px 6px;text-align:center;font-size:0.7rem;text-transform:uppercase">Exp. Início</th>
+              <th style="background:#2D3277;color:#fff;padding:8px 6px;text-align:center;font-size:0.7rem;text-transform:uppercase">Exp. Fim</th>
+              <th style="background:#2D3277;color:#fff;padding:8px 6px;text-align:center;font-size:0.7rem;text-transform:uppercase">Pacotes</th>
+              <th style="background:#2D3277;color:#fff;padding:8px 6px;text-align:center;font-size:0.7rem;text-transform:uppercase">Rotas</th>
+            </tr>
+          </thead>
+          <tbody>${linhasRegistros}</tbody>
+        </table>
+      </div>
+
+      <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:#666;font-weight:700;border-top:2px solid #FFE600;padding-top:12px;margin:16px 0 10px">Rotas</div>
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:0.78rem">
+          <thead>
+            <tr>
+              <th style="background:#2D3277;color:#fff;padding:8px 6px;text-align:center;font-size:0.7rem;text-transform:uppercase">Rota</th>
+              <th style="background:#2D3277;color:#fff;padding:8px 6px;text-align:center;font-size:0.7rem;text-transform:uppercase">Pendentes</th>
+              <th style="background:#2D3277;color:#fff;padding:8px 6px;text-align:center;font-size:0.7rem;text-transform:uppercase">Falhas</th>
+              <th style="background:#2D3277;color:#fff;padding:8px 6px;text-align:center;font-size:0.7rem;text-transform:uppercase">Sucesso</th>
+              <th style="background:#2D3277;color:#fff;padding:8px 6px;text-align:center;font-size:0.7rem;text-transform:uppercase">ORH Exec.</th>
+              <th style="background:#2D3277;color:#fff;padding:8px 6px;text-align:center;font-size:0.7rem;text-transform:uppercase">Status</th>
+            </tr>
+          </thead>
+          <tbody>${linhasVeiculos}</tbody>
+        </table>
+      </div>
+    `;
+
+    // Abre modal com conteúdo HTML rico
+    document.getElementById('modalTitle').textContent = '🧾 Relatório Logístico';
+    document.getElementById('modalBody').innerHTML = html;
+    const actions = document.getElementById('modalActions');
+    actions.innerHTML = '';
+    const btn = document.createElement('button');
+    btn.className = 'btn-yellow';
+    btn.textContent = 'Fechar';
+    btn.onclick = fecharModal;
+    actions.appendChild(btn);
+
+    document.getElementById('modalOverlay').classList.add('show');
+  }
+
+  // ─── Limpar tudo ───────────────────────────────────────────────
+  function limparTudo() {
+    modalConfirm('Limpar todos os dados', 'Isso apagará TODOS os registros e veículos. Esta ação não pode ser desfeita.').then(ok => {
+      if (!ok) return;
+      localStorage.removeItem('logistica');
+      localStorage.removeItem('veiculos');
+      toast('Dados apagados.');
+      carregar();
+      atualizarVeiculos();
+    });
+  }
+
+  // ─── Loop de atualização ───────────────────────────────────────
+  setInterval(() => {
+    atualizarAlerta();
+    atualizarVeiculos();
+  }, 10000);
+
+  // ─── Init ──────────────────────────────────────────────────────
+  document.getElementById('data').value = hoje();
+  if (getVeiculos().length > 0) {
+    document.getElementById('areaImport').style.display = 'none';
+    document.getElementById('areaLimpar').style.display = 'block';
+  }
+  carregar();
+  atualizarVeiculos();
+  atualizarAlerta();
+</script>
+
+</body>
+</html>
