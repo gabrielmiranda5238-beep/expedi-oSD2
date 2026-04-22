@@ -467,6 +467,25 @@
       line-height: 1.35;
     }
 
+    .report-filter-compact {
+      grid-template-columns: 1fr auto;
+      align-items: center;
+    }
+
+    .report-filter-summary {
+      color: var(--ml-text);
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .report-filter-summary span {
+      display: block;
+      margin-top: 4px;
+      color: var(--ml-muted);
+      font-size: 0.76rem;
+      font-weight: 500;
+    }
+
     .modal-overlay.relatorio-mobile .modal-body {
       white-space: normal;
     }
@@ -1080,11 +1099,11 @@
       }
 
       .modal-overlay.relatorio-mobile .modal-body > div[style*="grid-template-columns:repeat(3,1fr)"] > div:nth-child(5) > div:first-child {
-        color: var(--ml-green) !important;
+        color: var(--ml-red) !important;
       }
 
       .modal-overlay.relatorio-mobile .modal-body > div[style*="grid-template-columns:repeat(3,1fr)"] > div:nth-child(6) > div:first-child {
-        color: var(--ml-red) !important;
+        color: var(--ml-green) !important;
       }
 
       .modal-overlay.relatorio-mobile .modal-body > div[style*="grid-template-columns:repeat(3,1fr)"] > div > div:last-child {
@@ -1188,6 +1207,14 @@
         grid-column: 1 / -1;
         color: var(--ml-muted);
         font-size: 0.74rem;
+      }
+
+      .modal-overlay.relatorio-mobile .report-filter-compact {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-overlay.relatorio-mobile .report-filter-summary {
+        font-size: 0.86rem;
       }
 
       .modal-overlay.relatorio-mobile .report-operacional-wrap {
@@ -1379,12 +1406,21 @@
       <div class="kpi-label">Rotas na Rua</div>
     </div>
     <div class="kpi kpi-mobile-only">
-      <div class="kpi-value success" id="kpiMobileFinalizadas">0</div>
-      <div class="kpi-label">Rotas Finalizadas</div>
+      <div class="kpi-value danger" id="kpiMobileFinalizadas">0%</div>
+      <div class="kpi-label">Falhas Entregas</div>
     </div>
     <div class="kpi">
-      <div class="kpi-value danger" id="kpiFinalizados">0</div>
-      <div class="kpi-label">Rotas Atrasadas</div>
+      <div class="kpi-value success" id="kpiFinalizados">0%</div>
+      <div class="kpi-label">Desempenho Total</div>
+    </div>
+  </div>
+
+  <!-- AÇÕES -->
+  <div class="card card-acoes">
+    <div class="btn-row">
+      <button class="btn-yellow" onclick="exportarCSV()">📥 Exportar CSV</button>
+      <button class="btn-secondary" onclick="relatorioCompleto()">🧾 Relatório</button>
+      <button class="btn-danger" onclick="limparTudo()">🗑 Limpar Dados</button>
     </div>
   </div>
 
@@ -1470,19 +1506,13 @@
             <th>Falhas</th>
             <th>Sucesso</th>
             <th>ORH Exec.</th>
-            <th>Status</th>
+            <th>Desempenho</th>
             <th>Ação</th>
           </tr>
         </thead>
         <tbody id="tabelaVeiculos"></tbody>
       </table>
     </div>
-  </div>
-
-  <!-- ALERTA -->
-  <div class="card card-status">
-    <div class="card-title">🚨 Status da Operação</div>
-    <div id="alertaGeral" class="alerta ok">✅ Sistema OK</div>
   </div>
 
   <!-- GRAFICO -->
@@ -1520,15 +1550,6 @@
         </thead>
         <tbody id="tabela"></tbody>
       </table>
-    </div>
-  </div>
-
-  <!-- AÇÕES -->
-  <div class="card card-acoes">
-    <div class="btn-row">
-      <button class="btn-yellow" onclick="exportarCSV()">📥 Exportar CSV</button>
-      <button class="btn-secondary" onclick="relatorioCompleto()">🧾 Relatório</button>
-      <button class="btn-danger" onclick="limparTudo()">🗑 Limpar Dados</button>
     </div>
   </div>
 
@@ -1628,6 +1649,36 @@
 
   function getVal(id) {
     return document.getElementById(id).value.trim();
+  }
+
+  function calcularDesempenho(sucesso = 0, falhas = 0) {
+    const entregues = Number(sucesso) || 0;
+    const falhasEntrega = Number(falhas) || 0;
+    const total = entregues + falhasEntrega;
+    return total > 0 ? Math.round((entregues / total) * 100) : 0;
+  }
+
+  function calcularFalhasPercentual(sucesso = 0, falhas = 0) {
+    const entregues = Number(sucesso) || 0;
+    const falhasEntrega = Number(falhas) || 0;
+    const total = entregues + falhasEntrega;
+    return total > 0 ? Math.round((falhasEntrega / total) * 100) : 0;
+  }
+
+  function totaisEntregas(lista = getVeiculos()) {
+    return lista.reduce((acc, rota) => {
+      acc.entregues += Number(rota.sucesso) || 0;
+      acc.falhas += Number(rota.falhas) || 0;
+      return acc;
+    }, { entregues: 0, falhas: 0 });
+  }
+
+  function desempenhoRotaHTML(rota) {
+    const entregues = Number(rota.sucesso) || 0;
+    const falhas = Number(rota.falhas) || 0;
+    const percentual = calcularDesempenho(entregues, falhas);
+    const classe = percentual >= 95 ? 'badge-green' : percentual >= 85 ? 'badge-yellow' : 'badge-red';
+    return `<span class="badge ${classe}">${percentual}%</span><div style="margin-top:4px;color:#94a3b8;font-size:0.72rem">${entregues} entregues / ${falhas} falhas</div>`;
   }
 
   // ─── Registro ──────────────────────────────────────────────────
@@ -1755,29 +1806,13 @@
       // Compatibilidade com rotas antigas (formato simples)
       if (v.codigo) {
         naRua++;
-        const hora = new Date().getHours();
-        const atrasada = hora >= 23 || v.status === 'ATRASADA';
-        const statusBadge = v.status === 'FINALIZADO'
-          ? '<span class="badge badge-green">FINALIZADO</span>'
-          : v.status === 'FINALIZADO COM ATRASO'
-          ? '<span class="badge badge-yellow">FINALIZADO COM ATRASO</span>'
-          : atrasada
-          ? '<span class="badge badge-red">ATRASADA</span>'
-          : v.status === 'A CAMINHO'
-            ? '<span class="badge badge-blue">A CAMINHO</span>'
-            : '<span class="badge badge-blue">EM ROTA</span>';
-
-        const alertaBadge = v.alertas > 0
-          ? `<span class="badge badge-red">⚠ ${v.alertas}</span>`
-          : '<span style="color:#999">—</span>';
-
         html += `<tr>
           <td style="font-weight:700;color:#2D3277">${v.codigo}</td>
           <td>${v.pendentes}</td>
           <td style="color:${v.falhas > 0 ? '#F23D4F' : '#333'};font-weight:${v.falhas > 0 ? '700' : '400'}">${v.falhas}</td>
           <td style="color:#00A650;font-weight:600">${v.sucesso}</td>
           <td>${v.orh}</td>
-          <td>${statusBadge}</td>
+          <td>${desempenhoRotaHTML(v)}</td>
           <td>${v.status !== 'FINALIZADO' && v.status !== 'FINALIZADO COM ATRASO' ? `<button class="btn-primary" style="padding:4px 12px;font-size:0.75rem;" onclick="finalizarRotaImportada(${lista.indexOf(v)})">✔ Finalizar</button>` : '<span style="color:#999">—</span>'}</td>
         </tr>`;
       } else {
@@ -1785,45 +1820,38 @@
         if (v.status === 'EM ROTA') naRua++;
         else finalizados++;
         html += `<tr>
-          <td colspan="8" style="text-align:left">${v.rota || '—'}</td>
-          <td><span class="badge ${v.status === 'EM ROTA' ? 'badge-blue' : 'badge-green'}">${v.status}</span></td>
+          <td colspan="6" style="text-align:left">${v.rota || '—'}</td>
+          <td><span class="badge badge-blue">Sem dados</span></td>
         </tr>`;
       }
     });
 
-    document.getElementById('tabelaVeiculos').innerHTML = html || '<tr><td colspan="8" style="color:#999;padding:16px">Nenhuma rota importada</td></tr>';
+    document.getElementById('tabelaVeiculos').innerHTML = html || '<tr><td colspan="7" style="color:#999;padding:16px">Nenhuma rota importada</td></tr>';
 
     const rotasImportadas = lista.filter(v => v.codigo).length || lista.length;
     const rotasNaRua = lista.filter(v => v.status === 'EM ROTA' || v.status === 'ATRASADA' || v.status === 'A CAMINHO').length;
-    const rotasFinalizadas = lista.filter(v => v.status === 'FINALIZADO' || v.status === 'FINALIZADO COM ATRASO').length;
-    const rotasAtrasadas = lista.filter(v => v.status === 'ATRASADA').length;
+    const totais = totaisEntregas(lista);
+    const desempenhoTotal = calcularDesempenho(totais.entregues, totais.falhas);
+    const falhasPercentual = calcularFalhasPercentual(totais.entregues, totais.falhas);
 
     document.getElementById('kpiNaRuaKpi').textContent = rotasImportadas;
-    document.getElementById('kpiFinalizados').textContent = rotasAtrasadas;
+    document.getElementById('kpiFinalizados').textContent = `${desempenhoTotal}%`;
 
     const kpiMobileNaRua = document.getElementById('kpiMobileNaRua');
     const kpiMobileFinalizadas = document.getElementById('kpiMobileFinalizadas');
     if (kpiMobileNaRua) kpiMobileNaRua.textContent = rotasNaRua;
-    if (kpiMobileFinalizadas) kpiMobileFinalizadas.textContent = rotasFinalizadas;
+    if (kpiMobileFinalizadas) kpiMobileFinalizadas.textContent = `${falhasPercentual}%`;
   }
 
   // ─── Alerta ────────────────────────────────────────────────────
   function atualizarAlerta() {
     const veiculos = getVeiculos();
-    const hora = new Date().getHours();
     const el = document.getElementById('alertaGeral');
+    if (!el) return;
 
-    const total = veiculos.length;
-    const atrasadas = veiculos.filter(v => v.status === 'ATRASADA').length;
     const naRua = veiculos.filter(v => v.status === 'EM ROTA' || v.status === 'ATRASADA' || v.status === 'A CAMINHO').length;
 
-    if (hora >= 23 && naRua > 0) {
-      el.textContent = `🚨 ATRASO — ${naRua} rota(s) ainda em andamento após 23h`;
-      el.className = 'alerta atraso';
-    } else if (atrasadas > 0) {
-      el.textContent = `⚠️ ${atrasadas} rota(s) atrasada(s) de ${total} em operação`;
-      el.className = 'alerta andamento';
-    } else if (naRua > 0) {
+    if (naRua > 0) {
       el.textContent = `⚠️ Operação em andamento — ${naRua} rota(s) na rua`;
       el.className = 'alerta andamento';
     } else {
@@ -1961,7 +1989,9 @@
     const todosDados = getLogistica();
     const dados = dataFiltro ? todosDados.filter(d => d.data === dataFiltro) : todosDados;
     const naRua = veiculos.filter(v => v.status === 'EM ROTA' || v.status === 'ATRASADA' || v.status === 'A CAMINHO');
-    const finalizados = veiculos.filter(v => v.status === 'FINALIZADO' || v.status === 'FINALIZADO COM ATRASO');
+    const totaisRelatorio = totaisEntregas(veiculos);
+    const desempenhoTotalRelatorio = calcularDesempenho(totaisRelatorio.entregues, totaisRelatorio.falhas);
+    const falhasPercentualRelatorio = calcularFalhasPercentual(totaisRelatorio.entregues, totaisRelatorio.falhas);
     const pacotesTotal = dados.reduce((s, d) => s + d.pacotes, 0);
     const rotasTotal = dados.reduce((s, d) => s + d.rotas, 0);
     const hoje = new Date().toLocaleDateString('pt-BR');
@@ -1969,6 +1999,26 @@
     const textoFiltro = dataFiltro
       ? `Mostrando registros do dia ${dataFiltroBR}`
       : 'Mostrando todos os registros salvos';
+    const filtroRelatorioHTML = dataFiltro
+      ? `
+        <div class="report-filter report-filter-compact">
+          <div class="report-filter-summary">
+            Data filtrada: ${dataFiltroBR}
+            <span>${textoFiltro}</span>
+          </div>
+          <button type="button" onclick="relatorioCompleto('')">Editar data</button>
+        </div>
+      `
+      : `
+        <div class="report-filter">
+          <div>
+            <label for="relatorioDataFiltro">Filtrar relatorio por data</label>
+            <input id="relatorioDataFiltro" type="date" value="${dataFiltro}" onchange="relatorioCompleto(this.value)">
+          </div>
+          <button type="button" onclick="relatorioCompleto('')">Limpar</button>
+          <div class="report-filter-status">${textoFiltro}</div>
+        </div>
+      `;
 
     // ── Registros operacionais ──
     let linhasRegistros = '';
@@ -1996,24 +2046,13 @@
     } else {
       veiculos.forEach(v => {
         if (v.codigo) {
-          const hora = new Date().getHours();
-          const efetivo = (hora >= 23 && v.status !== 'FINALIZADO' && v.status !== 'FINALIZADO COM ATRASO')
-            ? 'ATRASADA' : v.status;
-
-          const statusBadge =
-            efetivo === 'FINALIZADO'           ? '<span class="badge badge-green">FINALIZADO</span>' :
-            efetivo === 'FINALIZADO COM ATRASO'? '<span class="badge badge-yellow">FINALIZADO COM ATRASO</span>' :
-            efetivo === 'ATRASADA'             ? '<span class="badge badge-red">ATRASADA</span>' :
-            efetivo === 'A CAMINHO'            ? '<span class="badge badge-blue">A CAMINHO</span>' :
-                                                 '<span class="badge badge-blue">EM ROTA</span>';
-
           linhasVeiculos += `<tr>
             <td style="font-weight:700;color:#2D3277">${v.codigo}</td>
             <td>${v.pendentes}</td>
             <td style="color:${v.falhas > 0 ? '#F23D4F' : '#333'};font-weight:${v.falhas > 0 ? '700' : '400'}">${v.falhas}</td>
             <td style="color:#00A650;font-weight:600">${v.sucesso}</td>
             <td>${v.orh}</td>
-            <td>${statusBadge}</td>
+            <td>${desempenhoRotaHTML(v)}</td>
           </tr>`;
         }
       });
@@ -2043,24 +2082,17 @@
           <div style="font-size:0.7rem;color:#666;margin-top:4px;text-transform:uppercase;font-weight:600">Rotas na Rua</div>
         </div>
         <div style="background:#F0FFF4;border:1px solid #DCFCE7;border-radius:6px;padding:12px;text-align:center">
-          <div style="font-size:1.6rem;font-weight:800;color:#00A650">${finalizados.length}</div>
-          <div style="font-size:0.7rem;color:#666;margin-top:4px;text-transform:uppercase;font-weight:600">Rotas Finalizadas</div>
+          <div style="font-size:1.6rem;font-weight:800;color:#F23D4F">${falhasPercentualRelatorio}%</div>
+          <div style="font-size:0.7rem;color:#666;margin-top:4px;text-transform:uppercase;font-weight:600">Falhas Entregas (${totaisRelatorio.falhas})</div>
         </div>
         <div style="background:#FFF1F2;border:1px solid #FEE2E2;border-radius:6px;padding:12px;text-align:center">
-          <div style="font-size:1.6rem;font-weight:800;color:#F23D4F">${veiculos.filter(v => v.status === 'ATRASADA').length}</div>
-          <div style="font-size:0.7rem;color:#666;margin-top:4px;text-transform:uppercase;font-weight:600">Rotas Atrasadas</div>
+          <div style="font-size:1.6rem;font-weight:800;color:#00A650">${desempenhoTotalRelatorio}%</div>
+          <div style="font-size:0.7rem;color:#666;margin-top:4px;text-transform:uppercase;font-weight:600">Desempenho Total</div>
         </div>
       </div>
 
       <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:#666;font-weight:700;border-top:2px solid #FFE600;padding-top:12px;margin-bottom:10px">Registros Operacionais</div>
-      <div class="report-filter">
-        <div>
-          <label for="relatorioDataFiltro">Filtrar relatorio por data</label>
-          <input id="relatorioDataFiltro" type="date" value="${dataFiltro}" onchange="relatorioCompleto(this.value)">
-        </div>
-        <button type="button" onclick="relatorioCompleto('')">Limpar</button>
-        <div class="report-filter-status">${textoFiltro}</div>
-      </div>
+      ${filtroRelatorioHTML}
 
       <div class="report-operacional-wrap" style="overflow-x:auto">
         <table class="report-operacional-table" style="width:100%;border-collapse:collapse;font-size:0.78rem">
@@ -2090,7 +2122,7 @@
               <th style="background:#2D3277;color:#fff;padding:8px 6px;text-align:center;font-size:0.7rem;text-transform:uppercase">Falhas</th>
               <th style="background:#2D3277;color:#fff;padding:8px 6px;text-align:center;font-size:0.7rem;text-transform:uppercase">Sucesso</th>
               <th style="background:#2D3277;color:#fff;padding:8px 6px;text-align:center;font-size:0.7rem;text-transform:uppercase">ORH Exec.</th>
-              <th style="background:#2D3277;color:#fff;padding:8px 6px;text-align:center;font-size:0.7rem;text-transform:uppercase">Status</th>
+              <th style="background:#2D3277;color:#fff;padding:8px 6px;text-align:center;font-size:0.7rem;text-transform:uppercase">Desempenho</th>
             </tr>
           </thead>
           <tbody>${linhasVeiculos}</tbody>
