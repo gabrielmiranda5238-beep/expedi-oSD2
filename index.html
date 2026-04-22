@@ -407,6 +407,70 @@
       margin-bottom: 20px;
     }
 
+    .report-filter {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) auto;
+      gap: 12px;
+      align-items: end;
+      margin: 0 0 16px;
+      padding: 14px;
+      border: 1px solid var(--ml-border);
+      border-radius: 10px;
+      background: rgba(15,23,42,0.45);
+    }
+
+    .report-filter label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--ml-green);
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .report-filter input {
+      width: 100%;
+      min-height: 40px;
+      padding: 0 12px;
+      border: 1px solid var(--ml-border);
+      border-radius: 8px;
+      background: var(--ml-bg);
+      color: var(--ml-text);
+      font-size: 0.9rem;
+      box-sizing: border-box;
+    }
+
+    .report-filter button {
+      min-height: 40px;
+      padding: 0 16px;
+      border: 1px solid var(--ml-border);
+      border-radius: 8px;
+      background: transparent;
+      color: #bfdbfe;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .report-filter button:hover {
+      border-color: var(--ml-green);
+      color: var(--ml-green);
+    }
+
+    .report-filter-status {
+      grid-column: 1 / -1;
+      color: var(--ml-muted);
+      font-size: 0.8rem;
+      line-height: 1.35;
+    }
+
+    .modal-overlay.relatorio-mobile .modal-body {
+      white-space: normal;
+    }
+
     .modal-actions {
       display: flex;
       gap: 10px;
@@ -1077,7 +1141,7 @@
         box-sizing: border-box;
         gap: 10px;
         align-items: end;
-        margin: -60px 0 46px !important;
+        margin: 0 0 24px !important;
         padding: 14px;
         border: 1px solid var(--ml-border);
         border-radius: 10px;
@@ -1271,7 +1335,7 @@
       }
 
       .modal-overlay.relatorio-mobile .report-filter {
-        margin-top: -54px !important;
+        margin-top: 0 !important;
         grid-template-columns: 1fr;
       }
 
@@ -1988,6 +2052,7 @@
         </div>
       </div>
 
+      <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:#666;font-weight:700;border-top:2px solid #FFE600;padding-top:12px;margin-bottom:10px">Registros Operacionais</div>
       <div class="report-filter">
         <div>
           <label for="relatorioDataFiltro">Filtrar relatorio por data</label>
@@ -1997,7 +2062,6 @@
         <div class="report-filter-status">${textoFiltro}</div>
       </div>
 
-      <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:#666;font-weight:700;border-top:2px solid #FFE600;padding-top:12px;margin-bottom:10px">Registros Operacionais</div>
       <div class="report-operacional-wrap" style="overflow-x:auto">
         <table class="report-operacional-table" style="width:100%;border-collapse:collapse;font-size:0.78rem">
           <thead>
