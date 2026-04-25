@@ -486,6 +486,150 @@
       font-weight: 500;
     }
 
+    .report-operacional-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .report-operacional-item {
+      padding: 14px 16px;
+      border: 1px solid var(--ml-border);
+      border-radius: 10px;
+      background: rgba(15,23,42,0.55);
+    }
+
+    .report-operacional-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px 18px;
+    }
+
+    .report-operacional-field {
+      display: grid;
+      gap: 4px;
+    }
+
+    .report-operacional-label {
+      color: #93c5fd;
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .report-operacional-value {
+      color: var(--ml-text);
+      font-size: 0.95rem;
+      font-weight: 600;
+      line-height: 1.35;
+      word-break: break-word;
+    }
+
+    .report-generated {
+      font-size: 0.76rem !important;
+      color: var(--ml-muted) !important;
+      margin-bottom: 10px !important;
+      line-height: 1.3 !important;
+    }
+
+    .report-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .report-summary-card {
+      border: 1px solid var(--ml-border);
+      border-radius: 8px;
+      padding: 14px 10px;
+      background: rgba(15,23,42,0.5);
+      min-height: 98px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-align: center;
+    }
+
+    .report-summary-card.is-danger {
+      background: rgba(127,29,29,0.18);
+      border-color: rgba(248,113,113,0.35);
+    }
+
+    .report-summary-card.is-success {
+      background: rgba(20,83,45,0.2);
+      border-color: rgba(34,197,94,0.35);
+    }
+
+    .report-summary-value {
+      color: #93c5fd;
+      font-size: 1.9rem;
+      font-weight: 800;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .report-summary-card.is-danger .report-summary-value {
+      color: var(--ml-red);
+    }
+
+    .report-summary-card.is-success .report-summary-value {
+      color: var(--ml-green);
+    }
+
+    .report-summary-label {
+      color: #bfdbfe;
+      font-size: 0.66rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      line-height: 1.25;
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    .report-section-title {
+      font-size: 0.72rem !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.1em !important;
+      color: var(--ml-green) !important;
+      font-weight: 800 !important;
+      border-top: 1px solid var(--ml-border) !important;
+      padding-top: 10px !important;
+      margin: 14px 0 8px !important;
+    }
+
+    .report-table-wrap {
+      overflow-x: auto;
+    }
+
+    .report-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.74rem;
+      table-layout: fixed;
+    }
+
+    .report-table th {
+      background: #2D3277 !important;
+      color: #fff !important;
+      padding: 7px 5px !important;
+      text-align: center !important;
+      font-size: 0.66rem !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.03em !important;
+    }
+
+    .report-table td {
+      padding: 7px 5px !important;
+      text-align: center !important;
+      color: var(--ml-text) !important;
+      border-bottom: 1px solid rgba(148,163,184,0.25) !important;
+      line-height: 1.25 !important;
+      word-break: break-word !important;
+    }
+
     .modal-overlay.relatorio-mobile .modal-body {
       white-space: normal;
     }
@@ -1067,6 +1211,7 @@
         overflow-x: hidden;
         color: var(--ml-text);
         white-space: normal;
+        line-height: 1.35;
       }
 
       .modal-overlay.relatorio-mobile .modal-body > div[style*="grid-template-columns:repeat(3,1fr)"] {
@@ -1227,6 +1372,58 @@
         border: 1px solid var(--ml-border);
         border-radius: 10px;
         background: #0b1020;
+      }
+
+      .modal-overlay.relatorio-mobile .report-operacional-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px 10px;
+      }
+
+      .modal-overlay.relatorio-mobile .report-operacional-item {
+        padding: 12px 14px;
+      }
+
+      .modal-overlay.relatorio-mobile .report-operacional-value {
+        font-size: 0.88rem;
+      }
+
+      .modal-overlay.relatorio-mobile .report-summary-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+        margin-bottom: 12px;
+      }
+
+      .modal-overlay.relatorio-mobile .report-summary-card {
+        min-height: 150px;
+        padding: 18px 6px;
+        border-radius: 6px;
+      }
+
+      .modal-overlay.relatorio-mobile .report-summary-value {
+        font-size: 1.45rem;
+      }
+
+      .modal-overlay.relatorio-mobile .report-summary-label {
+        font-size: 0.58rem;
+      }
+
+      .modal-overlay.relatorio-mobile .report-section-title {
+        margin: 12px 0 8px;
+        padding-top: 9px;
+      }
+
+      .modal-overlay.relatorio-mobile .report-filter {
+        margin-bottom: 10px;
+        padding: 10px;
+      }
+
+      .modal-overlay.relatorio-mobile .report-table {
+        font-size: 0.64rem;
+      }
+
+      .modal-overlay.relatorio-mobile .report-table th,
+      .modal-overlay.relatorio-mobile .report-table td {
+        padding: 6px 4px;
       }
 
       .modal-overlay.relatorio-mobile .report-operacional-table {
@@ -1479,6 +1676,47 @@
     </div>
   </div>
 
+  <!-- LIMPA LOG -->
+  <div class="card card-limpalog">
+    <div class="card-title">🧹 Forms de Limpa Log</div>
+
+    <div class="grid-3">
+      <div>
+        <label for="limpaLogData">Data</label>
+        <input type="date" id="limpaLogData">
+      </div>
+      <div>
+        <label for="limpaLogEnviado">Foi enviado?</label>
+        <select id="limpaLogEnviado">
+          <option value="SIM">Sim</option>
+          <option value="NAO">Não</option>
+        </select>
+      </div>
+      <div>
+        <label for="limpaLogPacotes">Pacotes para listagem</label>
+        <input type="number" id="limpaLogPacotes" placeholder="0" min="0">
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-outline" onclick="salvarLimpaLog()">Salvar Limpa Log</button>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Enviado</th>
+            <th>Pacotes Listagem</th>
+            <th>Ação</th>
+          </tr>
+        </thead>
+        <tbody id="tabelaLimpaLog"></tbody>
+      </table>
+    </div>
+  </div>
+
   <!-- VEICULOS -->
   <div class="card card-veiculos">
     <div class="card-title">📍 Veículos em Rota</div>
@@ -1511,6 +1749,64 @@
           </tr>
         </thead>
         <tbody id="tabelaVeiculos"></tbody>
+      </table>
+    </div>
+
+    <div class="section-divider">Rotas com Desistencia</div>
+    <div class="grid-2">
+      <div>
+        <label for="rotaDesistencia">Rota</label>
+        <input type="text" id="rotaDesistencia" placeholder="Ex.: C14_SD2">
+      </div>
+      <div>
+        <label for="motivoDesistencia">Motivo da desistencia</label>
+        <input type="text" id="motivoDesistencia" placeholder="Informe o motivo">
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-outline" onclick="adicionarDesistencia()">Adicionar Desistencia</button>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Rota</th>
+            <th>Motivo</th>
+            <th>Data</th>
+            <th>Ação</th>
+          </tr>
+        </thead>
+        <tbody id="tabelaDesistencias"></tbody>
+      </table>
+    </div>
+
+    <div class="section-divider">Rotas com No Show</div>
+    <div class="grid-2">
+      <div>
+        <label for="rotaNoShow">Rota</label>
+        <input type="text" id="rotaNoShow" placeholder="Ex.: D18_SD2">
+      </div>
+      <div>
+        <label for="motivoNoShow">Motivo do no show</label>
+        <input type="text" id="motivoNoShow" placeholder="Informe o motivo">
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-outline" onclick="adicionarNoShow()">Adicionar No Show</button>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Rota</th>
+            <th>Motivo</th>
+            <th>Data</th>
+            <th>Ação</th>
+          </tr>
+        </thead>
+        <tbody id="tabelaNoShow"></tbody>
       </table>
     </div>
   </div>
@@ -1647,6 +1943,30 @@
     localStorage.setItem('veiculos', JSON.stringify(lista));
   }
 
+  function getDesistencias() {
+    return JSON.parse(localStorage.getItem('desistenciasRotas')) || [];
+  }
+
+  function setDesistencias(lista) {
+    localStorage.setItem('desistenciasRotas', JSON.stringify(lista));
+  }
+
+  function getNoShow() {
+    return JSON.parse(localStorage.getItem('rotasNoShow')) || [];
+  }
+
+  function setNoShow(lista) {
+    localStorage.setItem('rotasNoShow', JSON.stringify(lista));
+  }
+
+  function getLimpaLog() {
+    return JSON.parse(localStorage.getItem('formsLimpaLog')) || [];
+  }
+
+  function setLimpaLog(lista) {
+    localStorage.setItem('formsLimpaLog', JSON.stringify(lista));
+  }
+
   function getVal(id) {
     return document.getElementById(id).value.trim();
   }
@@ -1747,6 +2067,164 @@
       atualizarVeiculos();
       toast('Rotas removidas.');
     });
+  }
+
+  function adicionarDesistencia() {
+    const rota = getVal('rotaDesistencia');
+    const motivo = getVal('motivoDesistencia');
+
+    if (!rota) return toast('Informe a rota da desistencia.', 'erro');
+    if (!motivo) return toast('Informe o motivo da desistencia.', 'erro');
+
+    const lista = getDesistencias();
+    lista.unshift({
+      rota,
+      motivo,
+      data: new Date().toLocaleDateString('pt-BR')
+    });
+    setDesistencias(lista);
+
+    document.getElementById('rotaDesistencia').value = '';
+    document.getElementById('motivoDesistencia').value = '';
+    atualizarDesistencias();
+    toast('Desistencia registrada!');
+  }
+
+  function excluirDesistencia(index) {
+    modalConfirm('Excluir desistencia', 'Deseja remover esta rota desistida?').then(ok => {
+      if (!ok) return;
+      const lista = getDesistencias();
+      lista.splice(index, 1);
+      setDesistencias(lista);
+      atualizarDesistencias();
+      toast('Desistencia removida.');
+    });
+  }
+
+  function atualizarDesistencias() {
+    const lista = getDesistencias();
+    const tbody = document.getElementById('tabelaDesistencias');
+    if (!tbody) return;
+
+    if (lista.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="4" style="color:#999;padding:16px">Nenhuma rota com desistencia</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = lista.map((item, index) => `
+      <tr>
+        <td style="font-weight:700;color:#2D3277">${item.rota}</td>
+        <td>${item.motivo}</td>
+        <td>${item.data || '—'}</td>
+        <td><button class="btn-danger" style="padding:4px 12px;font-size:0.75rem;" onclick="excluirDesistencia(${index})">✕</button></td>
+      </tr>
+    `).join('');
+  }
+
+  function adicionarNoShow() {
+    const rota = getVal('rotaNoShow');
+    const motivo = getVal('motivoNoShow');
+
+    if (!rota) return toast('Informe a rota do no show.', 'erro');
+    if (!motivo) return toast('Informe o motivo do no show.', 'erro');
+
+    const lista = getNoShow();
+    lista.unshift({
+      rota,
+      motivo,
+      data: new Date().toLocaleDateString('pt-BR')
+    });
+    setNoShow(lista);
+
+    document.getElementById('rotaNoShow').value = '';
+    document.getElementById('motivoNoShow').value = '';
+    atualizarNoShow();
+    toast('No show registrado!');
+  }
+
+  function excluirNoShow(index) {
+    modalConfirm('Excluir no show', 'Deseja remover esta rota de no show?').then(ok => {
+      if (!ok) return;
+      const lista = getNoShow();
+      lista.splice(index, 1);
+      setNoShow(lista);
+      atualizarNoShow();
+      toast('No show removido.');
+    });
+  }
+
+  function atualizarNoShow() {
+    const lista = getNoShow();
+    const tbody = document.getElementById('tabelaNoShow');
+    if (!tbody) return;
+
+    if (lista.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="4" style="color:#999;padding:16px">Nenhuma rota com no show</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = lista.map((item, index) => `
+      <tr>
+        <td style="font-weight:700;color:#2D3277">${item.rota}</td>
+        <td>${item.motivo}</td>
+        <td>${item.data || '—'}</td>
+        <td><button class="btn-danger" style="padding:4px 12px;font-size:0.75rem;" onclick="excluirNoShow(${index})">✕</button></td>
+      </tr>
+    `).join('');
+  }
+
+  function salvarLimpaLog() {
+    const data = getVal('limpaLogData');
+    const enviado = getVal('limpaLogEnviado');
+    const pacotes = Number(getVal('limpaLogPacotes')) || 0;
+
+    if (!data) return toast('Informe a data do limpa log.', 'erro');
+    if (pacotes < 0) return toast('Pacotes para listagem não podem ser negativos.', 'erro');
+
+    const lista = getLimpaLog();
+    lista.unshift({
+      data,
+      enviado,
+      pacotesListagem: enviado === 'SIM' ? pacotes : 0
+    });
+    setLimpaLog(lista);
+
+    document.getElementById('limpaLogData').value = hoje();
+    document.getElementById('limpaLogEnviado').value = 'SIM';
+    document.getElementById('limpaLogPacotes').value = '';
+    atualizarLimpaLog();
+    toast('Forms de limpa log registrado!');
+  }
+
+  function excluirLimpaLog(index) {
+    modalConfirm('Excluir limpa log', 'Deseja remover este registro de limpa log?').then(ok => {
+      if (!ok) return;
+      const lista = getLimpaLog();
+      lista.splice(index, 1);
+      setLimpaLog(lista);
+      atualizarLimpaLog();
+      toast('Registro de limpa log removido.');
+    });
+  }
+
+  function atualizarLimpaLog() {
+    const lista = getLimpaLog();
+    const tbody = document.getElementById('tabelaLimpaLog');
+    if (!tbody) return;
+
+    if (lista.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="4" style="color:#999;padding:16px">Nenhum forms de limpa log registrado</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = lista.map((item, index) => `
+      <tr>
+        <td style="font-weight:700;color:#2D3277">${item.data}</td>
+        <td>${item.enviado === 'SIM' ? '<span class="badge badge-green">SIM</span>' : '<span class="badge badge-red">NÃO</span>'}</td>
+        <td>${item.pacotesListagem ?? 0}</td>
+        <td><button class="btn-danger" style="padding:4px 12px;font-size:0.75rem;" onclick="excluirLimpaLog(${index})">✕</button></td>
+      </tr>
+    `).join('');
   }
 
   function parsearRotas(texto) {
@@ -1986,6 +2464,9 @@
   // ─── Relatório ─────────────────────────────────────────────────
   function relatorioCompleto(dataFiltro = '') {
     const veiculos = getVeiculos();
+    const desistencias = getDesistencias();
+    const noShow = getNoShow();
+    const limpaLog = getLimpaLog();
     const todosDados = getLogistica();
     const dados = dataFiltro ? todosDados.filter(d => d.data === dataFiltro) : todosDados;
     const naRua = veiculos.filter(v => v.status === 'EM ROTA' || v.status === 'ATRASADA' || v.status === 'A CAMINHO');
@@ -2023,7 +2504,7 @@
     // ── Registros operacionais ──
     let linhasRegistros = '';
     if (dados.length === 0) {
-      linhasRegistros = '<tr><td class="empty-row" colspan="8" style="color:#999;text-align:center;padding:14px">Nenhum registro</td></tr>';
+      linhasRegistros = '<div class="report-operacional-item"><div class="report-operacional-value" style="color:#94a3b8">Nenhum registro</div></div>';
     } else {
       dados.forEach(d => {
         linhasRegistros += `<tr>
@@ -2039,63 +2520,197 @@
       });
     }
 
-    // ── Veículos ──
-    let linhasVeiculos = '';
-    if (veiculos.length === 0) {
-      linhasVeiculos = '<tr><td colspan="6" style="color:#999;text-align:center;padding:14px">Nenhuma rota importada</td></tr>';
+    let linhasRegistrosDetalhados = '';
+    if (dados.length === 0) {
+      linhasRegistrosDetalhados = '<div class="report-operacional-item"><div class="report-operacional-value" style="color:#94a3b8">Nenhum registro</div></div>';
     } else {
-      veiculos.forEach(v => {
-        if (v.codigo) {
-          linhasVeiculos += `<tr>
-            <td style="font-weight:700;color:#2D3277">${v.codigo}</td>
-            <td>${v.pendentes}</td>
-            <td style="color:${v.falhas > 0 ? '#F23D4F' : '#333'};font-weight:${v.falhas > 0 ? '700' : '400'}">${v.falhas}</td>
-            <td style="color:#00A650;font-weight:600">${v.sucesso}</td>
-            <td>${v.orh}</td>
-            <td>${desempenhoRotaHTML(v)}</td>
-          </tr>`;
-        }
+      dados.forEach(d => {
+        linhasRegistrosDetalhados += `<div class="report-operacional-item">
+          <div class="report-operacional-grid">
+            <div class="report-operacional-field">
+              <div class="report-operacional-label">Data</div>
+              <div class="report-operacional-value">${d.data}</div>
+            </div>
+            <div class="report-operacional-field">
+              <div class="report-operacional-label">Descarregamento</div>
+              <div class="report-operacional-value">${d.descarregamento || 'â€”'}</div>
+            </div>
+            <div class="report-operacional-field">
+              <div class="report-operacional-label">Audit. Inicio</div>
+              <div class="report-operacional-value">${d.auditoriaInicio || 'â€”'}</div>
+            </div>
+            <div class="report-operacional-field">
+              <div class="report-operacional-label">Audit. Fim</div>
+              <div class="report-operacional-value">${d.auditoriaFim || 'â€”'}</div>
+            </div>
+            <div class="report-operacional-field">
+              <div class="report-operacional-label">Exp. Inicio</div>
+              <div class="report-operacional-value">${d.inicio || 'â€”'}</div>
+            </div>
+            <div class="report-operacional-field">
+              <div class="report-operacional-label">Exp. Fim</div>
+              <div class="report-operacional-value">${d.fim || 'â€”'}</div>
+            </div>
+            <div class="report-operacional-field">
+              <div class="report-operacional-label">Pacotes</div>
+              <div class="report-operacional-value">${d.pacotes}</div>
+            </div>
+            <div class="report-operacional-field">
+              <div class="report-operacional-label">Rotas</div>
+              <div class="report-operacional-value">${d.rotas}</div>
+            </div>
+          </div>
+        </div>`;
       });
-      if (!linhasVeiculos) {
-        linhasVeiculos = '<tr><td colspan="6" style="color:#999;text-align:center;padding:14px">Nenhuma rota importada</td></tr>';
-      }
+    }
+
+    // ── Veículos ──
+    let linhasDesistencias = '';
+    if (desistencias.length === 0) {
+      linhasDesistencias = '<tr><td colspan="3" style="color:#999;text-align:center;padding:14px">Nenhuma desistencia registrada</td></tr>';
+    } else {
+      desistencias.forEach(item => {
+        linhasDesistencias += `<tr>
+          <td style="font-weight:700;color:#2D3277">${item.rota}</td>
+          <td>${item.motivo}</td>
+          <td>${item.data || '—'}</td>
+        </tr>`;
+      });
+    }
+
+    let linhasDesistenciasDetalhadas = '';
+    if (desistencias.length === 0) {
+      linhasDesistenciasDetalhadas = '<div class="report-operacional-item"><div class="report-operacional-value" style="color:#94a3b8">Nenhuma desistencia registrada</div></div>';
+    } else {
+      desistencias.forEach(item => {
+        linhasDesistenciasDetalhadas += `<div class="report-operacional-item">
+          <div class="report-operacional-grid">
+            <div class="report-operacional-field">
+              <div class="report-operacional-label">Rota</div>
+              <div class="report-operacional-value">${item.rota || '-'}</div>
+            </div>
+            <div class="report-operacional-field">
+              <div class="report-operacional-label">Data</div>
+              <div class="report-operacional-value">${item.data || '-'}</div>
+            </div>
+            <div class="report-operacional-field" style="grid-column:1 / -1">
+              <div class="report-operacional-label">Motivo</div>
+              <div class="report-operacional-value">${item.motivo || '-'}</div>
+            </div>
+          </div>
+        </div>`;
+      });
+    }
+
+    let linhasNoShow = '';
+    if (noShow.length === 0) {
+      linhasNoShow = '<tr><td colspan="3" style="color:#999;text-align:center;padding:14px">Nenhuma rota com no show registrada</td></tr>';
+    } else {
+      noShow.forEach(item => {
+        linhasNoShow += `<tr>
+          <td style="font-weight:700;color:#2D3277">${item.rota}</td>
+          <td>${item.motivo}</td>
+          <td>${item.data || '—'}</td>
+        </tr>`;
+      });
+    }
+
+    let linhasNoShowDetalhadas = '';
+    if (noShow.length === 0) {
+      linhasNoShowDetalhadas = '<div class="report-operacional-item"><div class="report-operacional-value" style="color:#94a3b8">Nenhuma rota com no show registrada</div></div>';
+    } else {
+      noShow.forEach(item => {
+        linhasNoShowDetalhadas += `<div class="report-operacional-item">
+          <div class="report-operacional-grid">
+            <div class="report-operacional-field">
+              <div class="report-operacional-label">Rota</div>
+              <div class="report-operacional-value">${item.rota || '-'}</div>
+            </div>
+            <div class="report-operacional-field">
+              <div class="report-operacional-label">Data</div>
+              <div class="report-operacional-value">${item.data || '-'}</div>
+            </div>
+            <div class="report-operacional-field" style="grid-column:1 / -1">
+              <div class="report-operacional-label">Motivo</div>
+              <div class="report-operacional-value">${item.motivo || '-'}</div>
+            </div>
+          </div>
+        </div>`;
+      });
+    }
+
+    let linhasLimpaLog = '';
+    if (limpaLog.length === 0) {
+      linhasLimpaLog = '<tr><td colspan="3" style="color:#999;text-align:center;padding:14px">Nenhum forms de limpa log registrado</td></tr>';
+    } else {
+      limpaLog.forEach(item => {
+        linhasLimpaLog += `<tr>
+          <td style="font-weight:700;color:#2D3277">${item.data}</td>
+          <td>${item.enviado === 'SIM' ? 'Sim' : 'Não'}</td>
+          <td>${item.pacotesListagem ?? 0}</td>
+        </tr>`;
+      });
+    }
+
+    let linhasLimpaLogDetalhadas = '';
+    if (limpaLog.length === 0) {
+      linhasLimpaLogDetalhadas = '<div class="report-operacional-item"><div class="report-operacional-value" style="color:#94a3b8">Nenhum forms de limpa log registrado</div></div>';
+    } else {
+      limpaLog.forEach(item => {
+        linhasLimpaLogDetalhadas += `<div class="report-operacional-item">
+          <div class="report-operacional-grid">
+            <div class="report-operacional-field">
+              <div class="report-operacional-label">Data</div>
+              <div class="report-operacional-value">${item.data || '-'}</div>
+            </div>
+            <div class="report-operacional-field">
+              <div class="report-operacional-label">Enviado</div>
+              <div class="report-operacional-value">${item.enviado === 'SIM' ? 'Sim' : 'Não'}</div>
+            </div>
+            <div class="report-operacional-field" style="grid-column:1 / -1">
+              <div class="report-operacional-label">Pacotes Listagem</div>
+              <div class="report-operacional-value">${item.pacotesListagem ?? 0}</div>
+            </div>
+          </div>
+        </div>`;
+      });
     }
 
     const html = `
       <div style="font-size:0.8rem;color:#666;margin-bottom:16px">Gerado em ${hoje} às ${new Date().toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'})}</div>
 
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px">
-        <div style="background:#F5F9FF;border:1px solid #DBEAFE;border-radius:6px;padding:12px;text-align:center">
-          <div style="font-size:1.6rem;font-weight:800;color:#2D3277">${pacotesTotal}</div>
-          <div style="font-size:0.7rem;color:#666;margin-top:4px;text-transform:uppercase;font-weight:600">Total Pacotes</div>
+      <div class="report-summary-grid">
+        <div class="report-summary-card">
+          <div class="report-summary-value">${pacotesTotal}</div>
+          <div class="report-summary-label">Total Pacotes</div>
         </div>
-        <div style="background:#F5F9FF;border:1px solid #DBEAFE;border-radius:6px;padding:12px;text-align:center">
-          <div style="font-size:1.6rem;font-weight:800;color:#2D3277">${rotasTotal}</div>
-          <div style="font-size:0.7rem;color:#666;margin-top:4px;text-transform:uppercase;font-weight:600">Total Rotas Registradas</div>
+        <div class="report-summary-card">
+          <div class="report-summary-value">${rotasTotal}</div>
+          <div class="report-summary-label">Total Rotas Registradas</div>
         </div>
-        <div style="background:#F5F9FF;border:1px solid #DBEAFE;border-radius:6px;padding:12px;text-align:center">
-          <div style="font-size:1.6rem;font-weight:800;color:#2D3277">${veiculos.length}</div>
-          <div style="font-size:0.7rem;color:#666;margin-top:4px;text-transform:uppercase;font-weight:600">Rotas Importadas</div>
+        <div class="report-summary-card">
+          <div class="report-summary-value">${veiculos.length}</div>
+          <div class="report-summary-label">Rotas Importadas</div>
         </div>
-        <div style="background:#F5F9FF;border:1px solid #DBEAFE;border-radius:6px;padding:12px;text-align:center">
-          <div style="font-size:1.6rem;font-weight:800;color:#3483FA">${naRua.length}</div>
-          <div style="font-size:0.7rem;color:#666;margin-top:4px;text-transform:uppercase;font-weight:600">Rotas na Rua</div>
+        <div class="report-summary-card">
+          <div class="report-summary-value">${naRua.length}</div>
+          <div class="report-summary-label">Rotas na Rua</div>
         </div>
-        <div style="background:#F0FFF4;border:1px solid #DCFCE7;border-radius:6px;padding:12px;text-align:center">
-          <div style="font-size:1.6rem;font-weight:800;color:#F23D4F">${falhasPercentualRelatorio}%</div>
-          <div style="font-size:0.7rem;color:#666;margin-top:4px;text-transform:uppercase;font-weight:600">Falhas Entregas (${totaisRelatorio.falhas})</div>
+        <div class="report-summary-card is-danger">
+          <div class="report-summary-value">${falhasPercentualRelatorio}%</div>
+          <div class="report-summary-label">Falhas Entregas (${totaisRelatorio.falhas})</div>
         </div>
-        <div style="background:#FFF1F2;border:1px solid #FEE2E2;border-radius:6px;padding:12px;text-align:center">
-          <div style="font-size:1.6rem;font-weight:800;color:#00A650">${desempenhoTotalRelatorio}%</div>
-          <div style="font-size:0.7rem;color:#666;margin-top:4px;text-transform:uppercase;font-weight:600">Desempenho Total</div>
+        <div class="report-summary-card is-success">
+          <div class="report-summary-value">${desempenhoTotalRelatorio}%</div>
+          <div class="report-summary-label">Desempenho Total</div>
         </div>
       </div>
 
       <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:#666;font-weight:700;border-top:2px solid #FFE600;padding-top:12px;margin-bottom:10px">Registros Operacionais</div>
       ${filtroRelatorioHTML}
 
-      <div class="report-operacional-wrap" style="overflow-x:auto">
-        <table class="report-operacional-table" style="width:100%;border-collapse:collapse;font-size:0.78rem">
+      <div class="report-operacional-wrap report-table-wrap">
+        <table class="report-operacional-table report-table">
           <thead>
             <tr>
               <th style="background:#2D3277;color:#fff;padding:8px 6px;text-align:center;font-size:0.7rem;text-transform:uppercase">Data</th>
@@ -2112,20 +2727,45 @@
         </table>
       </div>
 
-      <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:#666;font-weight:700;border-top:2px solid #FFE600;padding-top:12px;margin:16px 0 10px">Rotas</div>
-      <div style="overflow-x:auto">
-        <table style="width:100%;border-collapse:collapse;font-size:0.78rem">
+      <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:#666;font-weight:700;border-top:2px solid #FFE600;padding-top:12px;margin:16px 0 10px">Rotas com Desistencia</div>
+      <div class="report-table-wrap">
+        <table class="report-table">
           <thead>
             <tr>
               <th style="background:#2D3277;color:#fff;padding:8px 6px;text-align:center;font-size:0.7rem;text-transform:uppercase">Rota</th>
-              <th style="background:#2D3277;color:#fff;padding:8px 6px;text-align:center;font-size:0.7rem;text-transform:uppercase">Pendentes</th>
-              <th style="background:#2D3277;color:#fff;padding:8px 6px;text-align:center;font-size:0.7rem;text-transform:uppercase">Falhas</th>
-              <th style="background:#2D3277;color:#fff;padding:8px 6px;text-align:center;font-size:0.7rem;text-transform:uppercase">Sucesso</th>
-              <th style="background:#2D3277;color:#fff;padding:8px 6px;text-align:center;font-size:0.7rem;text-transform:uppercase">ORH Exec.</th>
-              <th style="background:#2D3277;color:#fff;padding:8px 6px;text-align:center;font-size:0.7rem;text-transform:uppercase">Desempenho</th>
+              <th style="background:#2D3277;color:#fff;padding:8px 6px;text-align:center;font-size:0.7rem;text-transform:uppercase">Motivo</th>
+              <th style="background:#2D3277;color:#fff;padding:8px 6px;text-align:center;font-size:0.7rem;text-transform:uppercase">Data</th>
             </tr>
           </thead>
-          <tbody>${linhasVeiculos}</tbody>
+          <tbody>${linhasDesistencias}</tbody>
+        </table>
+      </div>
+
+      <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:#666;font-weight:700;border-top:2px solid #FFE600;padding-top:12px;margin:16px 0 10px">Rotas com No Show</div>
+      <div class="report-table-wrap">
+        <table class="report-table">
+          <thead>
+            <tr>
+              <th style="background:#2D3277;color:#fff;padding:8px 6px;text-align:center;font-size:0.7rem;text-transform:uppercase">Rota</th>
+              <th style="background:#2D3277;color:#fff;padding:8px 6px;text-align:center;font-size:0.7rem;text-transform:uppercase">Motivo</th>
+              <th style="background:#2D3277;color:#fff;padding:8px 6px;text-align:center;font-size:0.7rem;text-transform:uppercase">Data</th>
+            </tr>
+          </thead>
+          <tbody>${linhasNoShow}</tbody>
+        </table>
+      </div>
+
+      <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:#666;font-weight:700;border-top:2px solid #FFE600;padding-top:12px;margin:16px 0 10px">Forms de Limpa Log</div>
+      <div class="report-table-wrap">
+        <table class="report-table">
+          <thead>
+            <tr>
+              <th style="background:#2D3277;color:#fff;padding:8px 6px;text-align:center;font-size:0.7rem;text-transform:uppercase">Data</th>
+              <th style="background:#2D3277;color:#fff;padding:8px 6px;text-align:center;font-size:0.7rem;text-transform:uppercase">Enviado</th>
+              <th style="background:#2D3277;color:#fff;padding:8px 6px;text-align:center;font-size:0.7rem;text-transform:uppercase">Pacotes Listagem</th>
+            </tr>
+          </thead>
+          <tbody>${linhasLimpaLog}</tbody>
         </table>
       </div>
     `;
@@ -2133,6 +2773,27 @@
     // Abre modal com conteúdo HTML rico
     document.getElementById('modalTitle').textContent = '🧾 Relatório Logístico';
     document.getElementById('modalBody').innerHTML = html;
+    const reportBody = document.getElementById('modalBody');
+    if (reportBody.firstElementChild) {
+      reportBody.firstElementChild.classList.add('report-generated');
+    }
+    reportBody.querySelectorAll('div[style*="border-top:2px solid #FFE600"]').forEach(el => {
+      el.className = 'report-section-title';
+    });
+    const reportOperacionalWrap = document.querySelector('.report-operacional-wrap');
+    if (reportOperacionalWrap) {
+      reportOperacionalWrap.innerHTML = `<div class="report-operacional-list">${linhasRegistrosDetalhados}</div>`;
+    }
+    const reportTableWraps = reportBody.querySelectorAll('.report-table-wrap');
+    if (reportTableWraps[1]) {
+      reportTableWraps[1].innerHTML = `<div class="report-operacional-list">${linhasDesistenciasDetalhadas}</div>`;
+    }
+    if (reportTableWraps[2]) {
+      reportTableWraps[2].innerHTML = `<div class="report-operacional-list">${linhasNoShowDetalhadas}</div>`;
+    }
+    if (reportTableWraps[3]) {
+      reportTableWraps[3].innerHTML = `<div class="report-operacional-list">${linhasLimpaLogDetalhadas}</div>`;
+    }
     const actions = document.getElementById('modalActions');
     actions.innerHTML = '';
     const btn = document.createElement('button');
@@ -2150,9 +2811,15 @@
       if (!ok) return;
       localStorage.removeItem('logistica');
       localStorage.removeItem('veiculos');
+      localStorage.removeItem('desistenciasRotas');
+      localStorage.removeItem('rotasNoShow');
+      localStorage.removeItem('formsLimpaLog');
       toast('Dados apagados.');
       carregar();
       atualizarVeiculos();
+      atualizarDesistencias();
+      atualizarNoShow();
+      atualizarLimpaLog();
     });
   }
 
@@ -2164,12 +2831,16 @@
 
   // ─── Init ──────────────────────────────────────────────────────
   document.getElementById('data').value = hoje();
+  document.getElementById('limpaLogData').value = hoje();
   if (getVeiculos().length > 0) {
     document.getElementById('areaImport').style.display = 'none';
     document.getElementById('areaLimpar').style.display = 'block';
   }
   carregar();
   atualizarVeiculos();
+  atualizarDesistencias();
+  atualizarNoShow();
+  atualizarLimpaLog();
   atualizarAlerta();
 </script>
 
