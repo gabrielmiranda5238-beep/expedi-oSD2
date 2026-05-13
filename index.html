@@ -2231,13 +2231,13 @@
     const rotas = [];
 
     // Divide o texto em blocos por código de rota (ex: C14_SD2, 4A13_SD2, D3_SD2)
-    const blocos = texto.split(/(?=\b[A-Z0-9]+_SD\d+\s*·)/);
+    const blocos = texto.split(/(?=\b[A-Z0-9]+_SDE\d+\s*·)/);
 
     blocos.forEach(bloco => {
       if (!bloco.trim()) return;
 
       // Código da rota: ex "C14_SD2"
-      const codigoMatch = bloco.match(/^([A-Z0-9]+_SD\d+)/);
+      const codigoMatch = bloco.match(/^([A-Z0-9]+_SDE\d+)/);
       if (!codigoMatch) return;
       const codigo = codigoMatch[1];
 
