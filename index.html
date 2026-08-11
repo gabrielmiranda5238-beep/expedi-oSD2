@@ -1114,6 +1114,19 @@
     }
 
     @media (max-width: 430px) {
+      .ml-header {
+        gap: 8px;
+        padding: 10px 12px;
+      }
+
+      .ml-header-logo {
+        font-size: 0.88rem;
+      }
+
+      .ml-header-badge {
+        display: none;
+      }
+
       .container {
         padding-left: 12px;
         padding-right: 12px;
@@ -1756,7 +1769,7 @@
     <div class="grid-2">
       <div>
         <label for="rotaDesistencia">Rota</label>
-        <input type="text" id="rotaDesistencia" placeholder="Ex.: C14_SDE2">
+        <input type="text" id="rotaDesistencia" placeholder="Ex.: C14_SD2">
       </div>
       <div>
         <label for="motivoDesistencia">Motivo da desistencia</label>
@@ -1785,7 +1798,7 @@
     <div class="grid-2">
       <div>
         <label for="rotaNoShow">Rota</label>
-        <input type="text" id="rotaNoShow" placeholder="Ex.: D18_SDE2">
+        <input type="text" id="rotaNoShow" placeholder="Ex.: D18_SD2">
       </div>
       <div>
         <label for="motivoNoShow">Motivo do no show</label>
@@ -2230,14 +2243,14 @@
   function parsearRotas(texto) {
     const rotas = [];
 
-    // Divide o texto em blocos por código de rota (ex: C14_SD2, 4A13_SD2, D3_SD2)
-    const blocos = texto.split(/(?=\b[A-Z0-9]+_SDE\d+\s*·)/);
+    // Divide o texto em blocos por código de rota (ex: C14_SD2, C14_AM1, C14_SDE, D3_PM, E7_CHP)
+    const blocos = texto.split(/(?=\b[A-Z0-9]+_(?:SDE|AM1|SD\d*|PM|CHP)\b\s*·)/i);
 
     blocos.forEach(bloco => {
       if (!bloco.trim()) return;
 
-      // Código da rota: ex "C14_SD2"
-      const codigoMatch = bloco.match(/^([A-Z0-9]+_SDE\d+)/);
+      // Código da rota: ex "C14_SD2", "C14_AM1", "C14_SDE", "D3_PM", "E7_CHP"
+      const codigoMatch = bloco.match(/^([A-Z0-9]+_(?:SDE|AM1|SD\d*|PM|CHP))/i);
       if (!codigoMatch) return;
       const codigo = codigoMatch[1];
 
@@ -2245,8 +2258,8 @@
       const numMatch = bloco.match(/#(\d+)/);
       const numero = numMatch ? numMatch[1] : '—';
 
-      // Motorista: aparece após "·MSP\d+ · SD\d+" e antes de "Extra" ou "MLP"
-      const motoristaMatch = bloco.match(/·MSP\d+\s*·\s*SD\d+\s*([a-záéíóúãõâêîôûàèìòùç\s]+?)(?:Extra|MLP)/i);
+      // Motorista: aparece após "·MSP\d+ · <ciclo>" e antes de "Extra" ou "MLP"
+      const motoristaMatch = bloco.match(/·MSP\d+\s*·\s*(?:SDE|AM1|SD\d*|PM|CHP)\s*([a-záéíóúãõâêîôûàèìòùç\s]+?)(?:Extra|MLP)/i);
       const motorista = motoristaMatch ? motoristaMatch[1].trim() : '—';
 
       // SPR: pendentes, falhas, sucesso
